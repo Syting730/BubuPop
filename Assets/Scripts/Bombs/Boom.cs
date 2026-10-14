@@ -9,6 +9,9 @@ public class Boom : MonoBehaviour
     [Header("Configuracion de la bomba")]
     [SerializeField] private float explosionDelay = 2f;
 
+    // Casillas que alcanza la explosion en cada direccion
+    [SerializeField] private int explosionRange = 2;
+
     [Header("Referencias del mapa")]
     [SerializeField] private Grid grid;
     [SerializeField] private Tilemap destructibleTilemap;
@@ -93,16 +96,24 @@ public class Boom : MonoBehaviour
         // Casilla central
         affectedCells.Add(bombCell);
 
-        // Cuatro casillas adyacentes
+        // Hasta explosionRange casillas en cada direccion
         foreach (Vector3Int direction in directions)
         {
-            Vector3Int targetCell = bombCell + direction;
+            for (int i = 1; i <= explosionRange; i++)
+            {
+                Vector3Int targetCell = bombCell + direction * i;
 
-            // Los muros fijos bloquean la explosion
-            if (fixedWallsTilemap.HasTile(targetCell))
-                continue;
+                // Los muros fijos bloquean la explosion
+                if (fixedWallsTilemap.HasTile(targetCell))
+                    break;
 
-            affectedCells.Add(targetCell);
+                affectedCells.Add(targetCell);
+
+                // Un obstaculo destructible se rompe pero
+                // la explosion no sigue detras de el
+                if (destructibleTilemap.HasTile(targetCell))
+                    break;
+            }
         }
 
         return affectedCells;

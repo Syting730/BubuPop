@@ -6,12 +6,16 @@ public class BombPlacer : MonoBehaviour
     [SerializeField] private GameObject bombPrefab;
     [SerializeField] private Grid grid;
 
+    [Header("Controles")]
+    // Jugador 1: Space, Jugador 2: Enter
+    [SerializeField] private Key bombKey = Key.E;
+
     private GameObject currentBomb;
 
     void Update()
     {
         if (Keyboard.current != null &&
-            Keyboard.current.eKey.wasPressedThisFrame)
+            Keyboard.current[bombKey].wasPressedThisFrame)
         {
             PlaceBomb();
         }

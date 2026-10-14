@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class PlayerDamage : MonoBehaviour
 {
+    [Header("Jugador")]
+    [SerializeField] private string playerName = "Jugador 1";
+
     [Header("Sistema de vidas")]
     [SerializeField] private int maxLives = 3;
 
@@ -80,9 +83,19 @@ public class PlayerDamage : MonoBehaviour
     {
         isDead = true;
 
-        Debug.Log("GAME OVER: El jugador ha perdido sus 3 vidas");
+        Debug.Log("GAME OVER: " + playerName + " ha perdido sus vidas");
 
         gameObject.SetActive(false);
+    }
+
+    public bool IsDead()
+    {
+        return isDead;
+    }
+
+    public string GetPlayerName()
+    {
+        return playerName;
     }
 
     public int GetCurrentLives()
