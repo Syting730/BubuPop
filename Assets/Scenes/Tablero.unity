@@ -132,6 +132,7 @@ GameObject:
   - component: {fileID: 99315163}
   - component: {fileID: 99315166}
   - component: {fileID: 99315165}
+  - component: {fileID: 99315167}
   m_Layer: 7
   m_Name: ObstaculosDestructibles
   m_TagString: Untagged
@@ -347,6 +348,26 @@ TilemapCollider2D:
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
   m_UseDelaunayMesh: 0
+--- !u!114 &99315167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 99315161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a3de3bd955b2f940a964456d12d3f59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GeneradorObstaculos
+  tileObstaculo: {fileID: 11400000, guid: fec351bb142a6d84aa34489e0bdcafb8, type: 2}
+  xMin: -5
+  xMax: 9
+  yMin: -7
+  yMax: 5
+  spawnJugador1: {x: -4, y: 4}
+  spawnJugador2: {x: 8, y: -6}
+  probabilidad: 0.15
 --- !u!1 &223272621
 GameObject:
   m_ObjectHideFlags: 0
