@@ -15,8 +15,8 @@ public class GeneradorObstaculos : MonoBehaviour
     public int yMax = 5;
 
     [Header("Zonas Seguras (Coordenadas de inicio)")]
-    public Vector2Int spawnJugador1; // <--- NUEVO
-    public Vector2Int spawnJugador2; // <--- NUEVO
+    public Vector2Int spawnJugador1;
+    public Vector2Int spawnJugador2;
 
     [Header("Cantidad aleatoria")]
     [Range(0f, 1f)]
@@ -41,7 +41,7 @@ public class GeneradorObstaculos : MonoBehaviour
         {
             for (int y = yMin; y <= yMax; y++)
             {
-                // Evitar muros fijos (suelen estar en coordenadas impares)
+                // Evitar muros fijos
                 if (Mathf.Abs(x) % 2 == 1 && Mathf.Abs(y) % 2 == 1) continue;
 
                 // Evitar encerrar a los jugadores
@@ -62,9 +62,7 @@ public class GeneradorObstaculos : MonoBehaviour
 
     bool EsZonaSegura(int x, int y)
     {
-        // La suma de valores absolutos (distancia de Manhattan) <= 1
-        // protege la casilla central y las 4 casillas adyacentes (arriba, abajo, izq, der).
-        
+
         if (Mathf.Abs(x - spawnJugador1.x) + Mathf.Abs(y - spawnJugador1.y) <= 2) return true;
         if (Mathf.Abs(x - spawnJugador2.x) + Mathf.Abs(y - spawnJugador2.y) <= 2) return true;
 
