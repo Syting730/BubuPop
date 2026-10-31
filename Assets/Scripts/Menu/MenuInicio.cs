@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 // Menu de inicio: pantalla principal con 3 elecciones + START
 public class MenuInicio : MonoBehaviour
@@ -76,7 +77,11 @@ public class MenuInicio : MonoBehaviour
                   GameSettings.HumanPlayers + " jugadores + " +
                   GameSettings.AIPlayers + " IAs. Colores: " + colores);
 
-        // Aqui cargaremos la escena del juego (siguiente paso)
+        GameSettings.SettingsChosen = true;
+
+        // Abrir la escena del juego
+        // (de momento solo existe el modo Clasico, en la escena Tablero)
+        SceneManager.LoadScene("Tablero");
     }
 
     // ---------- Pantalla de Modo ----------

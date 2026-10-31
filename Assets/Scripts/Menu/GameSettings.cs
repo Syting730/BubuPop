@@ -24,6 +24,10 @@ public static class GameSettings
 
     public static GameMode SelectedMode = GameMode.Clasico;
 
+    // true cuando se ha pulsado START en el menu
+    // (si se abre el Tablero directamente, es false)
+    public static bool SettingsChosen = false;
+
     // Jugadores reales (1-4). El resto son IAs.
     public static int HumanPlayers = 1;
 
