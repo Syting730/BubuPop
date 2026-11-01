@@ -79,9 +79,12 @@ public class MenuInicio : MonoBehaviour
 
         GameSettings.SettingsChosen = true;
 
-        // Abrir la escena del juego
-        // (de momento solo existe el modo Clasico, en la escena Tablero)
-        SceneManager.LoadScene("Tablero");
+        // Cada modo tiene su escena
+        // (Boss Volcan todavia no existe: de momento usa el Tablero clasico)
+        if (GameSettings.SelectedMode == GameSettings.GameMode.AsaltoDiamante)
+            SceneManager.LoadScene("TableroAD");
+        else
+            SceneManager.LoadScene("Tablero");
     }
 
     // ---------- Pantalla de Modo ----------

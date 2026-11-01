@@ -249,4 +249,22 @@ public class PartidaManager : MonoBehaviour
         GameSettings.SettingsChosen = false;
         SceneManager.LoadScene("Menu inicio");
     }
+
+    // Numero (0-3) de un jugador, o -1 si no es un jugador
+    public int IndiceDe(GameObject jugador)
+    {
+        for (int i = 0; i < jugadores.Length; i++)
+        {
+            if (jugadores[i] == jugador)
+                return i;
+        }
+
+        return -1;
+    }
+
+    // "Jugador 1 (Rojo)"
+    public string NombreDe(int i)
+    {
+        return NombreJugador(i);
+    }
 }
