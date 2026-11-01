@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ObstaculoDestructible
   m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.Tilemaps.Tile
   m_Sprite: {fileID: 7482667652216324306, guid: 77ff1f1f6d9a089439ca829d8c22b45d, type: 3}
-  m_Color: {r: 0.8980392, g: 0.22352941, b: 0.20784314, a: 1}
+  m_Color: {r: 0.7660377, g: 0.102620155, b: 0.71518755, a: 1}
   m_Transform:
     e00: 1
     e01: 0
