@@ -197,17 +197,31 @@ public class PartidaManager : MonoBehaviour
             TerminarPartida("¡Empate!");
     }
 
-    // Fin de partida por tiempo (modo Asalto al Diamante) ----------
- 
+    // ---------- Fin de partida por tiempo (modo Asalto al Diamante) ----------
+
     // La llama el Temporizador cuando la cuenta atras llega a 0
     public void TerminarPorTiempo()
     {
         if (partidaTerminada)
             return;
- 
-        // Cuando existan los puntos del modo AD, aqui se elegira
-        // al ganador (el que tenga mas puntos)
-        TerminarPartida("¡Se acabó el tiempo!");
+
+        // Modo AD: gana quien tenga mas puntos
+        PuntosAD puntos = FindAnyObjectByType<PuntosAD>();
+
+        if (puntos == null)
+        {
+            TerminarPartida("¡Se acabó el tiempo!");
+            return;
+        }
+
+        int ganador = puntos.Ganador();
+
+        if (ganador < 0)
+            TerminarPartida("¡Se acabó el tiempo!\n¡Empate!");
+        else
+            TerminarPartida("¡Se acabó el tiempo!\n¡Gana " +
+                            NombreJugador(ganador) + " con " +
+                            puntos.GetPuntos(ganador) + " puntos!");
     }
 
     private void TerminarPartida(string mensaje)

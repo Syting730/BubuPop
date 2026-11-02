@@ -11,7 +11,8 @@ using UnityEngine.Tilemaps;
 //   al suelo en esa casilla y cualquiera lo puede coger
 // - el portador puede soltarlo cuando quiera:
 //   J1 = Q, J2 = Ctrl derecho, mando = R / RB / R1
-// (Puntos: tarjeta de otro companero)
+// - al llegar a su base, el portador gana puntos (PuntosAD)
+
 public class Diamante : MonoBehaviour
 {
     [Header("Tilemap del suelo (para calcular el centro)")]
@@ -41,6 +42,7 @@ public class Diamante : MonoBehaviour
     private GameObject portador;
     private int indicePortador = -1;
     private Base[] bases;
+    private PuntosAD puntos;
 
     // Para quitar los efectos al soltar el diamante
     private PlayerMovement movimientoPortador;
@@ -78,6 +80,7 @@ public class Diamante : MonoBehaviour
     private void Start()
     {
         bases = FindObjectsByType<Base>(FindObjectsSortMode.None);
+        puntos = FindAnyObjectByType<PuntosAD>();
         ColocarEnCentro();
     }
 
@@ -191,7 +194,8 @@ public class Diamante : MonoBehaviour
                 Debug.Log("¡Jugador " + (indicePortador + 1) +
                           " ha llevado el diamante a su base!");
 
-                // Aqui otro companero puede sumar los puntos
+                if (puntos != null)
+                    puntos.SumarPunto(indicePortador);
 
                 Soltar();
                 return;
