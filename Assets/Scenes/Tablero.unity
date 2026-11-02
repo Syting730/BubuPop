@@ -132,6 +132,7 @@ GameObject:
   - component: {fileID: 99315163}
   - component: {fileID: 99315166}
   - component: {fileID: 99315165}
+  - component: {fileID: 99315167}
   m_Layer: 7
   m_Name: ObstaculosDestructibles
   m_TagString: Untagged
@@ -311,7 +312,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a52a02dda79a8734a81161385b8c5404, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DestructibleTilemap
-  respawnTime: 20
+  respawnTime: 30
 --- !u!19719996 &99315166
 TilemapCollider2D:
   m_ObjectHideFlags: 0
@@ -350,6 +351,33 @@ TilemapCollider2D:
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
   m_UseDelaunayMesh: 0
+--- !u!114 &99315167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 99315161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e23135aa899a98e40b9b66cc12b5ced1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GeneradorObstaculos
+  tileObstaculo: {fileID: 11400000, guid: fec351bb142a6d84aa34489e0bdcafb8, type: 2}
+  suelo: {fileID: 0}
+  murosFijos: {fileID: 0}
+  modo: 1
+  anchoAnillo: 2
+  probabilidad: 0.29
+  maxEnFila: 1
+  igualarCaminoAlCentro: 1
+  evitarCuadrados: 1
+  radioSalida: 2
+  radioDiamante: 1
+  rodearDiamante: 1
+  caminoLibreHastaAnillo: 1
+  borrarObstaculosPintados: 0
+  semilla: 0
 --- !u!1 &140379496
 GameObject:
   m_ObjectHideFlags: 0
