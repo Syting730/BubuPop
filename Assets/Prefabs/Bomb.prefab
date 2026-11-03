@@ -106,6 +106,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Boom
   explosionDelay: 2
+  explosionRange: 2
   grid: {fileID: 0}
   destructibleTilemap: {fileID: 0}
   fixedWallsTilemap: {fileID: 0}

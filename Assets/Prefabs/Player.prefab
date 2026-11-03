@@ -213,3 +213,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   speed: 5
   controls: 0
+  grid: {fileID: 0}
+  capasBloqueo:
+    serializedVersion: 2
+    m_Bits: 0
+  margenEsquina: 0.15

@@ -16,12 +16,28 @@ public class PlayerMovement : MonoBehaviour
     [Header("Controles")]
     public ControlScheme controls = ControlScheme.InputActions;
 
+    // para saber donde esta el centro de cada casilla
+    public Grid grid;
+
     private Vector2 movementInput;
     private Rigidbody2D rb;
+
+    /* Codigo IA
+    public void SetEntradaIA(Vector2 direccion)
+    {
+        entradaIA = direccion;
+    }
+
+    // Para resolver diagonales: manda la ultima tecla pulsada
+    private int prevX, prevY;
+    private bool ejeHorizontal = true;*/
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+
+        if (grid == null)
+            grid = FindAnyObjectByType<Grid>();
 
         // Con teclas fijas no usamos PlayerInput, asi los dos
         // jugadores no se pelean por el mismo teclado
@@ -74,11 +90,32 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // Misma velocidad en diagonal
-        movementInput = Vector2.ClampMagnitude(direction, 1f);
+        movementInput = direction;
     }
 
     void FixedUpdate()
     {
-        rb.linearVelocity = movementInput*speed;
+        Vector2 dir = movementInput;
+
+         // sin diagonales (si se pulsan dos ejes, gana el horizontal)
+        if (dir.x != 0 && dir.y != 0)
+            dir.y = 0;
+            
+        Vector2 velocidad = dir * speed;
+ 
+        
+        // mientras avanza en un eje, se centra en el otro
+        // para entrar recto en los pasillos y no engancharse en las esquinas
+        Vector2 centro = grid.GetCellCenterWorld(grid.WorldToCell(rb.position));
+ 
+        if (dir.x != 0)
+            velocidad.y = (centro.y - rb.position.y) * 10f;
+ 
+        if (dir.y != 0)
+            velocidad.x = (centro.x - rb.position.x) * 10f;
+ 
+        rb.linearVelocity = velocidad;
     }
+    
+    
 }

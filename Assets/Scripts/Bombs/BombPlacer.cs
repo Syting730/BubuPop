@@ -9,6 +9,9 @@ public class BombPlacer : MonoBehaviour
     [Header("Controles")]
     // Jugador 1: Space, Jugador 2: Enter
     [SerializeField] private Key bombKey = Key.E;
+    
+    // IA = false para no bombas
+    public bool usarTeclado = true;
 
     private GameObject currentBomb;
 
@@ -21,7 +24,7 @@ public class BombPlacer : MonoBehaviour
         }
     }
 
-    void PlaceBomb()
+    public void PlaceBomb()
     {
         if (bombPrefab == null || grid == null)
         {
