@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
@@ -12,6 +13,7 @@ using UnityEngine.Tilemaps;
 // - el portador puede soltarlo cuando quiera:
 //   J1 = Q, J2 = Ctrl derecho, mando = R / RB / R1
 // - al llegar a su base, el portador gana puntos (PuntosAD)
+//   y el diamante desaparece: reaparece en el centro a los 10 s
 
 public class Diamante : MonoBehaviour
 {
@@ -23,6 +25,10 @@ public class Diamante : MonoBehaviour
 
     [Header("Posicion del diamante encima del portador")]
     [SerializeField] private Vector3 desplazamiento = new Vector3(0f, 0.5f, 0f);
+
+    [Header("Reaparicion tras entregarlo en la base")]
+    [Tooltip("Segundos que tarda en volver al centro (0 = al instante)")]
+    [SerializeField, Min(0f)] private float tiempoReaparicion = 10f;
 
     [Header("Efecto sobre el portador")]
     [Tooltip("Multiplica la velocidad del portador (0.5 = va a la mitad)")]
@@ -197,7 +203,8 @@ public class Diamante : MonoBehaviour
                 if (puntos != null)
                     puntos.SumarPunto(indicePortador);
 
-                Soltar();
+                QuitarEfectos();
+                StartCoroutine(Reaparecer());
                 return;
             }
         }
@@ -262,6 +269,46 @@ public class Diamante : MonoBehaviour
             return null;
 
         return Gamepad.all[numero];
+    }
+
+    // ---------- Reaparecer ----------
+
+    // true mientras el diamante esta esperando para reaparecer
+    public bool Esperando
+    {
+        get { return esperando; }
+    }
+
+    private bool esperando = false;
+
+    // Oculta el diamante y lo vuelve a poner en el centro
+    // pasados tiempoReaparicion segundos.
+    // WaitForSeconds usa el tiempo del juego: en pausa no cuenta.
+    private IEnumerator Reaparecer()
+    {
+        esperando = true;
+        Mostrar(false);
+        transform.position = posicionCentro;
+
+        Debug.Log("El diamante reaparecera en " + tiempoReaparicion + " s");
+
+        yield return new WaitForSeconds(tiempoReaparicion);
+
+        Mostrar(true);
+        esperando = false;
+
+        Debug.Log("El diamante ha vuelto al centro");
+    }
+
+    // Esconde o enseña el dibujo y el collider
+    // (sin collider nadie lo puede coger mientras no se ve)
+    private void Mostrar(bool visible)
+    {
+        foreach (Renderer r in GetComponentsInChildren<Renderer>())
+            r.enabled = visible;
+
+        foreach (Collider2D c in GetComponentsInChildren<Collider2D>())
+            c.enabled = visible;
     }
 
     // Suelta el diamante y lo devuelve al centro

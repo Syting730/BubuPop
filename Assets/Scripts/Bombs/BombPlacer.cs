@@ -47,5 +47,10 @@ public class BombPlacer : MonoBehaviour
             bombPosition,
             Quaternion.identity
         );
+
+        // La bomba recuerda quien la puso (para los puntos del modo AD)
+        Boom boom = currentBomb.GetComponent<Boom>();
+        if (boom != null)
+            boom.SetDueno(gameObject);
     }
 }

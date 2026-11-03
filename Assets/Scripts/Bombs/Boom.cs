@@ -22,6 +22,15 @@ public class Boom : MonoBehaviour
 
     private bool exploded = false;
 
+    // Jugador que ha puesto la bomba (para los puntos del modo AD)
+    private GameObject dueno;
+
+    // La llama BombPlacer al poner la bomba
+    public void SetDueno(GameObject jugador)
+    {
+        dueno = jugador;
+    }
+
     private List<GameObject> warningObjects =
         new List<GameObject>();
 
@@ -191,6 +200,8 @@ public class Boom : MonoBehaviour
         DestructibleTilemap manager =
             destructibleTilemap.GetComponent<DestructibleTilemap>();
 
+        int obstaculosRotos = 0;
+
         if (manager != null)
         {
             foreach (Vector3Int cell in affectedCells)
@@ -200,7 +211,8 @@ public class Boom : MonoBehaviour
                     Vector3 worldPosition =
                         grid.GetCellCenterWorld(cell);
 
-                    manager.DestroyBlock(worldPosition);
+                    if (manager.DestroyBlock(worldPosition))
+                        obstaculosRotos++;
                 }
             }
         }
@@ -209,6 +221,16 @@ public class Boom : MonoBehaviour
             Debug.LogWarning(
                 "Boom: falta el componente DestructibleTilemap."
             );
+        }
+
+        // Modo AD: +1 punto por cada obstaculo roto
+        if (obstaculosRotos > 0)
+        {
+            PuntosAD puntos = FindAnyObjectByType<PuntosAD>();
+            int indiceDueno = IndiceJugador(dueno);
+
+            if (puntos != null && indiceDueno >= 0)
+                puntos.SumarObstaculos(indiceDueno, obstaculosRotos);
         }
 
         // Eliminar el aura
@@ -236,6 +258,10 @@ public class Boom : MonoBehaviour
         PlayerDamage[] players =
             FindObjectsByType<PlayerDamage>();
 
+        // Modo AD: puntos por eliminar a otro jugador
+        PuntosAD puntos = FindAnyObjectByType<PuntosAD>();
+        int indiceDueno = IndiceJugador(dueno);
+
         foreach (PlayerDamage player in players)
         {
             Vector3Int playerCell =
@@ -243,9 +269,36 @@ public class Boom : MonoBehaviour
 
             if (affectedCells.Contains(playerCell))
             {
+                // Recien reaparecido: no recibe daño ni da puntos
+                if (player.IsInvulnerable())
+                    continue;
+
+                // Los puntos se calculan antes del golpe.
+                // Darse a uno mismo no da puntos (ni los quita).
+                int indiceVictima = IndiceJugador(player.gameObject);
+
+                if (puntos != null && indiceDueno >= 0 &&
+                    indiceVictima >= 0 && indiceVictima != indiceDueno)
+                {
+                    puntos.SumarEliminacion(indiceDueno, indiceVictima);
+                }
+
                 player.TakeDamage();
             }
         }
+    }
+
+    // Numero del jugador (0 = J1 ... 3 = J4), -1 si no se sabe
+    private int IndiceJugador(GameObject jugador)
+    {
+        if (jugador == null)
+            return -1;
+
+        PartidaManager partida = FindAnyObjectByType<PartidaManager>();
+        if (partida == null)
+            return -1;
+
+        return partida.IndiceDe(jugador);
     }
 
     private void OnDestroy()
