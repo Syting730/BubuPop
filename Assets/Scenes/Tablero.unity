@@ -665,6 +665,58 @@ RectTransform:
   m_AnchoredPosition: {x: -250, y: -50}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &344177061
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 344177063}
+  - component: {fileID: 344177062}
+  m_Layer: 0
+  m_Name: SpawnerEscudo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &344177062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 344177061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a780709419fbe143a745b1f0c3656e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PowerUpSpawner
+  prefabPowerUp: {fileID: 4673091212637162679, guid: 7d5e8a81bc598d5498ecb9b95978f9ec, type: 3}
+  grid: {fileID: 900570083}
+  suelo: {fileID: 673295873}
+  murosFijos: {fileID: 470400505}
+  obstaculosDestructibles: {fileID: 99315164}
+  intervaloSegundos: 20
+  powerUpsPorCiclo: 1
+  maxPowerUpsEnMapa: 3
+--- !u!4 &344177063
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 344177061}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.99094, y: 4.38752, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &381778046
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5932,6 +5984,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -7256151400374234219, guid: 49c5348ff976b13428e350bf4e547fc5, type: 3}
+      propertyPath: teclaUsarGuante
+      value: 56
+      objectReference: {fileID: 0}
+    - target: {fileID: -7256151400374234219, guid: 49c5348ff976b13428e350bf4e547fc5, type: 3}
+      propertyPath: maxGuantesAlmacenados
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 142824899662676174, guid: 49c5348ff976b13428e350bf4e547fc5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 8.5
@@ -6048,6 +6108,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BombPlacer
   bombPrefab: {fileID: 1948159499756354534, guid: 8f6c0e7304f584f48be82028b1d923f5, type: 3}
   grid: {fileID: 900570083}
+  capacidadBombas: 1
   bombKey: 2
   usarTeclado: 1
 --- !u!114 &1208737451
@@ -6714,6 +6775,58 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1328700141}
   m_CullTransparentMesh: 1
+--- !u!1 &1371046874
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1371046876}
+  - component: {fileID: 1371046875}
+  m_Layer: 0
+  m_Name: SpawnerGuante
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1371046875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1371046874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a780709419fbe143a745b1f0c3656e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PowerUpSpawner
+  prefabPowerUp: {fileID: 1644503856115824997, guid: 7db8352ea5ba9f14d8f363393bf9c40a, type: 3}
+  grid: {fileID: 900570083}
+  suelo: {fileID: 673295873}
+  murosFijos: {fileID: 470400505}
+  obstaculosDestructibles: {fileID: 99315164}
+  intervaloSegundos: 20
+  powerUpsPorCiclo: 1
+  maxPowerUpsEnMapa: 3
+--- !u!4 &1371046876
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1371046874}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.99094, y: 4.38752, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1418907423
 GameObject:
   m_ObjectHideFlags: 0
@@ -7046,6 +7159,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BombPlacer
   bombPrefab: {fileID: 1948159499756354534, guid: 8f6c0e7304f584f48be82028b1d923f5, type: 3}
   grid: {fileID: 900570083}
+  capacidadBombas: 1
   bombKey: 2
   usarTeclado: 1
 --- !u!114 &1486336163
@@ -7863,6 +7977,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BombPlacer
   bombPrefab: {fileID: 1948159499756354534, guid: 8f6c0e7304f584f48be82028b1d923f5, type: 3}
   grid: {fileID: 900570083}
+  capacidadBombas: 1
   bombKey: 1
   usarTeclado: 1
 --- !u!114 &1644458644
@@ -8585,6 +8700,58 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2089271638}
   m_CullTransparentMesh: 1
+--- !u!1 &2096890592
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2096890594}
+  - component: {fileID: 2096890593}
+  m_Layer: 0
+  m_Name: SpawnerBombaExtra
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2096890593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2096890592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a780709419fbe143a745b1f0c3656e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PowerUpSpawner
+  prefabPowerUp: {fileID: 1644503856115824997, guid: 01d8bbd01c9ca8a4bbd8ecb808217233, type: 3}
+  grid: {fileID: 900570083}
+  suelo: {fileID: 673295873}
+  murosFijos: {fileID: 470400505}
+  obstaculosDestructibles: {fileID: 99315164}
+  intervaloSegundos: 20
+  powerUpsPorCiclo: 1
+  maxPowerUpsEnMapa: 3
+--- !u!4 &2096890594
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2096890592}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.99094, y: 4.38752, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2101079494
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8709,6 +8876,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BombPlacer
   bombPrefab: {fileID: 1948159499756354534, guid: 8f6c0e7304f584f48be82028b1d923f5, type: 3}
   grid: {fileID: 900570083}
+  capacidadBombas: 1
   bombKey: 2
   usarTeclado: 1
 --- !u!114 &2101079498
@@ -8727,63 +8895,6 @@ MonoBehaviour:
   alcanceExplosion: 2
   tiempoEntreBurbujas: 3
   factorVelocidad: 0.6
---- !u!1001 &7532326653275007428
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4673091212637162679, guid: 7d5e8a81bc598d5498ecb9b95978f9ec, type: 3}
-      propertyPath: m_Name
-      value: EscudoPrueba
-      objectReference: {fileID: 0}
-    - target: {fileID: 5549703978486904304, guid: 7d5e8a81bc598d5498ecb9b95978f9ec, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -1.56
-      objectReference: {fileID: 0}
-    - target: {fileID: 5549703978486904304, guid: 7d5e8a81bc598d5498ecb9b95978f9ec, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 2.48
-      objectReference: {fileID: 0}
-    - target: {fileID: 5549703978486904304, guid: 7d5e8a81bc598d5498ecb9b95978f9ec, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5549703978486904304, guid: 7d5e8a81bc598d5498ecb9b95978f9ec, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5549703978486904304, guid: 7d5e8a81bc598d5498ecb9b95978f9ec, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5549703978486904304, guid: 7d5e8a81bc598d5498ecb9b95978f9ec, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5549703978486904304, guid: 7d5e8a81bc598d5498ecb9b95978f9ec, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5549703978486904304, guid: 7d5e8a81bc598d5498ecb9b95978f9ec, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5549703978486904304, guid: 7d5e8a81bc598d5498ecb9b95978f9ec, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5549703978486904304, guid: 7d5e8a81bc598d5498ecb9b95978f9ec, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 7d5e8a81bc598d5498ecb9b95978f9ec, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -8802,4 +8913,6 @@ SceneRoots:
   - {fileID: 475195159}
   - {fileID: 1286699582}
   - {fileID: 1642828187}
-  - {fileID: 7532326653275007428}
+  - {fileID: 344177063}
+  - {fileID: 1371046876}
+  - {fileID: 2096890594}
