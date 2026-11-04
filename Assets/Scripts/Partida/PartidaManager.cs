@@ -78,24 +78,16 @@ public class PartidaManager : MonoBehaviour
         return GameSettings.SettingsChosen && i >= GameSettings.HumanPlayers;
     }
 
-    // De momento la IA se queda quieta:
-    // quitamos el movimiento y las bombas por teclado.
-    // Cuando exista el script de IA, se activara aqui.
+   // Los jugadores IA los controla el script IA:
+    // él se encarga de moverse y de poner bombas.
+    // Aquí solo quitamos el teclado/mando para que no se peleen con los jugadores reales.
     private void ConvertirEnIA(int i)
     {
-        PlayerMovement movimiento = jugadores[i].GetComponent<PlayerMovement>();
-        if (movimiento != null)
-            movimiento.enabled = false;
-
-        BombPlacer bombas = jugadores[i].GetComponent<BombPlacer>();
-        if (bombas != null)
-            bombas.enabled = false;
-
         PlayerInput input = jugadores[i].GetComponent<PlayerInput>();
         if (input != null)
             input.enabled = false;
 
-        Debug.Log("Jugador " + (i + 1) + " es IA (de momento quieta)");
+        Debug.Log("Jugador " + (i + 1) + " es IA");
     }
 
     // ---------- Pausa ----------

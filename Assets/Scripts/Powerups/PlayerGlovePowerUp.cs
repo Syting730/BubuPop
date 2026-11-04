@@ -13,6 +13,9 @@ public class PlayerGlovePowerUp : MonoBehaviour
 
     public int GuantesDisponibles => guantesDisponibles;
 
+    // ia
+    public bool usarTeclado = true;
+
     private void Awake()
     {
         colocadorBombas = GetComponent<BombPlacer>();
@@ -20,6 +23,9 @@ public class PlayerGlovePowerUp : MonoBehaviour
 
     private void Update()
     {
+        if (!usarTeclado)
+            return;
+
         if (guantesDisponibles <= 0 || Keyboard.current == null)
             return;
 

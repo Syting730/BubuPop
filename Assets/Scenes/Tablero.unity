@@ -6094,6 +6094,7 @@ MonoBehaviour:
   playerName: Jugador 2
   maxLives: 3
   livesUI: {fileID: 1299471875}
+  invulnerableTrasReaparecer: 2
 --- !u!114 &1208737450
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6126,7 +6127,10 @@ MonoBehaviour:
   numeroJugador: 2
   alcanceExplosion: 2
   tiempoEntreBurbujas: 3
-  factorVelocidad: 0.6
+  factorVelocidad: 0.8
+  distanciaPowerUp: 5
+  preferenciaHumanos: 6
+  estado: 
 --- !u!1 &1237708196
 GameObject:
   m_ObjectHideFlags: 0
@@ -7145,6 +7149,7 @@ MonoBehaviour:
   playerName: Jugador 2
   maxLives: 3
   livesUI: {fileID: 1644304546}
+  invulnerableTrasReaparecer: 2
 --- !u!114 &1486336162
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7177,7 +7182,10 @@ MonoBehaviour:
   numeroJugador: 3
   alcanceExplosion: 2
   tiempoEntreBurbujas: 3
-  factorVelocidad: 0.6
+  factorVelocidad: 0.8
+  distanciaPowerUp: 5
+  preferenciaHumanos: 6
+  estado: 
 --- !u!1 &1517335680
 GameObject:
   m_ObjectHideFlags: 0
@@ -7995,6 +8003,7 @@ MonoBehaviour:
   playerName: Jugador 1
   maxLives: 3
   livesUI: {fileID: 1243952728}
+  invulnerableTrasReaparecer: 2
 --- !u!114 &1644458645
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8010,7 +8019,10 @@ MonoBehaviour:
   numeroJugador: 1
   alcanceExplosion: 2
   tiempoEntreBurbujas: 3
-  factorVelocidad: 0.6
+  factorVelocidad: 0.8
+  distanciaPowerUp: 5
+  preferenciaHumanos: 6
+  estado: 
 --- !u!1 &1665935156
 GameObject:
   m_ObjectHideFlags: 0
@@ -8862,6 +8874,7 @@ MonoBehaviour:
   playerName: Jugador 2
   maxLives: 3
   livesUI: {fileID: 1016112223}
+  invulnerableTrasReaparecer: 2
 --- !u!114 &2101079497
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8894,7 +8907,10 @@ MonoBehaviour:
   numeroJugador: 4
   alcanceExplosion: 2
   tiempoEntreBurbujas: 3
-  factorVelocidad: 0.6
+  factorVelocidad: 0.8
+  distanciaPowerUp: 5
+  preferenciaHumanos: 6
+  estado: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
