@@ -9,6 +9,8 @@ public class BombPlacer : MonoBehaviour
 
     [Header("Bombas")]
     [SerializeField, Min(1)] private int capacidadBombas = 1;
+    private bool bombaDobleActiva;
+    private bool segundaBombaPendiente;
 
     [Header("Controles")]
     // Jugador 1: Space, Jugador 2: Enter
@@ -20,7 +22,8 @@ public class BombPlacer : MonoBehaviour
     private readonly List<GameObject> bombasActivas =
         new List<GameObject>();
 
-    public int CapacidadBombas => capacidadBombas;
+    public int CapacidadBombas =>
+        capacidadBombas + ((bombaDobleActiva || segundaBombaPendiente) ? 1 : 0);
 
     private void Update()
     {
@@ -42,7 +45,7 @@ public class BombPlacer : MonoBehaviour
         // Quita de la lista las bombas que ya explotaron y se destruyeron.
         bombasActivas.RemoveAll(bomba => bomba == null);
 
-        if (bombasActivas.Count >= capacidadBombas)
+        if (bombasActivas.Count >= CapacidadBombas)
             return;
 
         Vector3Int cellPosition =
@@ -60,6 +63,15 @@ public class BombPlacer : MonoBehaviour
         );
 
         bombasActivas.Add(bombaNueva);
+        if (bombaDobleActiva)
+        {
+            bombaDobleActiva = false;
+            segundaBombaPendiente = true;
+        }
+        else if (segundaBombaPendiente)
+        {
+            segundaBombaPendiente = false;
+        }
 
         // La bomba recuerda quien la puso (para los puntos del modo AD)
         Boom boom = bombaNueva.GetComponent<Boom>();
@@ -67,19 +79,12 @@ public class BombPlacer : MonoBehaviour
             boom.SetDueno(gameObject);
     }
 
-    public bool AumentarCapacidadBombas(
-        int cantidad,
-        int capacidadMaxima
-    )
+    public bool ActivarBombaDoble()
     {
-        if (cantidad <= 0 || capacidadBombas >= capacidadMaxima)
+        if (bombaDobleActiva || segundaBombaPendiente)
             return false;
 
-        capacidadBombas = Mathf.Min(
-            capacidadBombas + cantidad,
-            capacidadMaxima
-        );
-
+        bombaDobleActiva = true;
         return true;
     }
 

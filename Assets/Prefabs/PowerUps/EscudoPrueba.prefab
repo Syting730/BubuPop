@@ -81,7 +81,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 3
+  m_SortingOrder: 4
   m_MaskInteraction: 0
   m_Sprite: {fileID: -3803196367135801590, guid: f2a7231ddd5744749824d9105df9a404, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -152,3 +152,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e4508c5aac6a2b4683a4a30f2d8f3a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpPickup
+  tipo: 0
