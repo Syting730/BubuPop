@@ -60,6 +60,11 @@ public class BombPlacer : MonoBehaviour
         );
 
         bombasActivas.Add(bombaNueva);
+
+        // La bomba recuerda quien la puso (para los puntos del modo AD)
+        Boom boom = bombaNueva.GetComponent<Boom>();
+        if (boom != null)
+            boom.SetDueno(gameObject);
     }
 
     public bool AumentarCapacidadBombas(

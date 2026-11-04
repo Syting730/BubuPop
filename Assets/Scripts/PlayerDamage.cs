@@ -1,4 +1,11 @@
+using System.Collections;
 using UnityEngine;
+
+// Vidas del jugador.
+// - Modo Clasico: 3 vidas; con 0 vidas el jugador queda eliminado.
+// - Modo Asalto al Diamante (hay PuntosAD en la escena):
+//   reaparece siempre en su salida, sin limite de vidas,
+//   y durante 2 s es invulnerable (parpadea).
 
 public class PlayerDamage : MonoBehaviour
 {
@@ -13,8 +20,17 @@ public class PlayerDamage : MonoBehaviour
 
     private int currentLives;
     private bool isDead = false;
+
+    [Header("Modo Asalto al Diamante")]
+    [Tooltip("Segundos sin recibir daño despues de reaparecer")]
+    [SerializeField, Min(0f)] private float invulnerableTrasReaparecer = 2f;
+
     private Vector3 spawnPosition;
     private PlayerShieldPowerUps powerUps;
+
+    // true en el modo AD: nunca se queda sin vidas
+    private bool vidasInfinitas = false;
+    private bool invulnerable = false;
 
     private void Start()
     {
@@ -27,6 +43,9 @@ public class PlayerDamage : MonoBehaviour
         // Inicializar vidas
         currentLives = maxLives;
 
+        // Si hay puntos del modo AD en la escena, se reaparece siempre
+        vidasInfinitas = FindAnyObjectByType<PuntosAD>() != null;
+
         // Mostrar las vidas iniciales
         if (livesUI != null)
         {
@@ -38,7 +57,7 @@ public class PlayerDamage : MonoBehaviour
 
     public void TakeDamage()
     {
-        if (isDead)
+        if (isDead || invulnerable)
             return;
 
         // Si el escudo está activo, no se pierde una vida
@@ -49,7 +68,17 @@ public class PlayerDamage : MonoBehaviour
         }
 
         // Restar una vida
+        // (en el modo AD tambien se resta, aunque no se muere:
+        //  asi el Diamante sabe que han alcanzado a su portador)
         currentLives--;
+
+        if (vidasInfinitas)
+        {
+            Debug.Log(playerName + " alcanzado: reaparece (modo AD)");
+            Respawn();
+            StartCoroutine(Invulnerable());
+            return;
+        }
 
         // Actualizar corazones
         if (livesUI != null)
@@ -97,6 +126,41 @@ public class PlayerDamage : MonoBehaviour
         );
 
         gameObject.SetActive(false);
+    }
+
+    // Parpadea y no recibe daño durante unos segundos.
+    // WaitForSeconds usa el tiempo del juego: en pausa se para.
+    private IEnumerator Invulnerable()
+    {
+        invulnerable = true;
+
+        SpriteRenderer[] dibujos = GetComponentsInChildren<SpriteRenderer>();
+        float tiempo = 0f;
+        float paso = 0.1f;
+
+        while (tiempo < invulnerableTrasReaparecer)
+        {
+            foreach (SpriteRenderer sr in dibujos)
+                sr.enabled = !sr.enabled;
+
+            yield return new WaitForSeconds(paso);
+            tiempo += paso;
+        }
+
+        foreach (SpriteRenderer sr in dibujos)
+            sr.enabled = true;
+
+        invulnerable = false;
+    }
+
+    // true si ahora no puede recibir daño:
+    // recien reaparecido (modo AD) o con el escudo activo
+    public bool IsInvulnerable()
+    {
+        if (invulnerable)
+            return true;
+
+        return powerUps != null && powerUps.EscudoActivo;
     }
 
     public bool IsDead()
