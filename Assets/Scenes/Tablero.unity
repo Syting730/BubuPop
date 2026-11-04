@@ -751,6 +751,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1264043348752207164, guid: 49c5348ff976b13428e350bf4e547fc5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1644458644}
+    - targetCorrespondingSourceObject: {fileID: 1264043348752207164, guid: 49c5348ff976b13428e350bf4e547fc5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1644458645}
   m_SourcePrefab: {fileID: 100100000, guid: 49c5348ff976b13428e350bf4e547fc5, type: 3}
 --- !u!1 &455090367
 GameObject:
@@ -6007,6 +6010,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1264043348752207164, guid: 49c5348ff976b13428e350bf4e547fc5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1208737449}
+    - targetCorrespondingSourceObject: {fileID: 1264043348752207164, guid: 49c5348ff976b13428e350bf4e547fc5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1208737451}
   m_SourcePrefab: {fileID: 100100000, guid: 49c5348ff976b13428e350bf4e547fc5, type: 3}
 --- !u!1 &1208737448 stripped
 GameObject:
@@ -6043,6 +6049,23 @@ MonoBehaviour:
   bombPrefab: {fileID: 1948159499756354534, guid: 8f6c0e7304f584f48be82028b1d923f5, type: 3}
   grid: {fileID: 900570083}
   bombKey: 2
+  usarTeclado: 1
+--- !u!114 &1208737451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1208737448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abc686cb8d318894f843cc61b766117c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IA
+  numeroJugador: 2
+  alcanceExplosion: 2
+  tiempoEntreBurbujas: 3
+  factorVelocidad: 0.6
 --- !u!1 &1237708196
 GameObject:
   m_ObjectHideFlags: 0
@@ -6985,6 +7008,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1264043348752207164, guid: 49c5348ff976b13428e350bf4e547fc5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1486336161}
+    - targetCorrespondingSourceObject: {fileID: 1264043348752207164, guid: 49c5348ff976b13428e350bf4e547fc5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1486336163}
   m_SourcePrefab: {fileID: 100100000, guid: 49c5348ff976b13428e350bf4e547fc5, type: 3}
 --- !u!1 &1486336160 stripped
 GameObject:
@@ -7021,6 +7047,23 @@ MonoBehaviour:
   bombPrefab: {fileID: 1948159499756354534, guid: 8f6c0e7304f584f48be82028b1d923f5, type: 3}
   grid: {fileID: 900570083}
   bombKey: 2
+  usarTeclado: 1
+--- !u!114 &1486336163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1486336160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abc686cb8d318894f843cc61b766117c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IA
+  numeroJugador: 3
+  alcanceExplosion: 2
+  tiempoEntreBurbujas: 3
+  factorVelocidad: 0.6
 --- !u!1 &1517335680
 GameObject:
   m_ObjectHideFlags: 0
@@ -7821,6 +7864,7 @@ MonoBehaviour:
   bombPrefab: {fileID: 1948159499756354534, guid: 8f6c0e7304f584f48be82028b1d923f5, type: 3}
   grid: {fileID: 900570083}
   bombKey: 1
+  usarTeclado: 1
 --- !u!114 &1644458644
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7836,6 +7880,22 @@ MonoBehaviour:
   playerName: Jugador 1
   maxLives: 3
   livesUI: {fileID: 1243952728}
+--- !u!114 &1644458645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1644458630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abc686cb8d318894f843cc61b766117c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IA
+  numeroJugador: 1
+  alcanceExplosion: 2
+  tiempoEntreBurbujas: 3
+  factorVelocidad: 0.6
 --- !u!1 &1665935156
 GameObject:
   m_ObjectHideFlags: 0
@@ -8611,6 +8671,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1264043348752207164, guid: 49c5348ff976b13428e350bf4e547fc5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2101079496}
+    - targetCorrespondingSourceObject: {fileID: 1264043348752207164, guid: 49c5348ff976b13428e350bf4e547fc5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2101079498}
   m_SourcePrefab: {fileID: 100100000, guid: 49c5348ff976b13428e350bf4e547fc5, type: 3}
 --- !u!1 &2101079495 stripped
 GameObject:
@@ -8647,6 +8710,80 @@ MonoBehaviour:
   bombPrefab: {fileID: 1948159499756354534, guid: 8f6c0e7304f584f48be82028b1d923f5, type: 3}
   grid: {fileID: 900570083}
   bombKey: 2
+  usarTeclado: 1
+--- !u!114 &2101079498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2101079495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abc686cb8d318894f843cc61b766117c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IA
+  numeroJugador: 4
+  alcanceExplosion: 2
+  tiempoEntreBurbujas: 3
+  factorVelocidad: 0.6
+--- !u!1001 &7532326653275007428
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4673091212637162679, guid: 7d5e8a81bc598d5498ecb9b95978f9ec, type: 3}
+      propertyPath: m_Name
+      value: EscudoPrueba
+      objectReference: {fileID: 0}
+    - target: {fileID: 5549703978486904304, guid: 7d5e8a81bc598d5498ecb9b95978f9ec, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.56
+      objectReference: {fileID: 0}
+    - target: {fileID: 5549703978486904304, guid: 7d5e8a81bc598d5498ecb9b95978f9ec, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.48
+      objectReference: {fileID: 0}
+    - target: {fileID: 5549703978486904304, guid: 7d5e8a81bc598d5498ecb9b95978f9ec, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5549703978486904304, guid: 7d5e8a81bc598d5498ecb9b95978f9ec, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5549703978486904304, guid: 7d5e8a81bc598d5498ecb9b95978f9ec, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5549703978486904304, guid: 7d5e8a81bc598d5498ecb9b95978f9ec, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5549703978486904304, guid: 7d5e8a81bc598d5498ecb9b95978f9ec, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5549703978486904304, guid: 7d5e8a81bc598d5498ecb9b95978f9ec, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5549703978486904304, guid: 7d5e8a81bc598d5498ecb9b95978f9ec, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5549703978486904304, guid: 7d5e8a81bc598d5498ecb9b95978f9ec, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 7d5e8a81bc598d5498ecb9b95978f9ec, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -8665,3 +8802,4 @@ SceneRoots:
   - {fileID: 475195159}
   - {fileID: 1286699582}
   - {fileID: 1642828187}
+  - {fileID: 7532326653275007428}

@@ -85,7 +85,7 @@ public class Diamante : MonoBehaviour
 
     private void Start()
     {
-        bases = FindObjectsByType<Base>(FindObjectsSortMode.None);
+        bases = FindObjectsByType<Base>();
         puntos = FindAnyObjectByType<PuntosAD>();
         ColocarEnCentro();
     }

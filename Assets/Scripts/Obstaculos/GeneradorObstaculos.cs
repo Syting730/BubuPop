@@ -622,7 +622,7 @@ public class GeneradorObstaculos : MonoBehaviour
 
         // Salida de cada jugador (los que esten en la escena, sean 2 o 4)
         foreach (PlayerMovement jugador in
-                 FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None))
+                 FindObjectsByType<PlayerMovement>())
         {
             Vector3Int salida = suelo.WorldToCell(jugador.transform.position);
             salidas.Add(salida);
@@ -630,7 +630,7 @@ public class GeneradorObstaculos : MonoBehaviour
         }
 
         // Bases del modo AD: toda la zona que ocupan
-        foreach (Base b in FindObjectsByType<Base>(FindObjectsSortMode.None))
+        foreach (Base b in FindObjectsByType<Base>())
         {
             Collider2D zona = b.GetComponent<Collider2D>();
             if (zona != null)

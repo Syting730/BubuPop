@@ -26,6 +26,7 @@ public class PlayerDamage : MonoBehaviour
     [SerializeField, Min(0f)] private float invulnerableTrasReaparecer = 2f;
 
     private Vector3 spawnPosition;
+    private PlayerShieldPowerUps powerUps;
 
     // true en el modo AD: nunca se queda sin vidas
     private bool vidasInfinitas = false;
@@ -33,8 +34,11 @@ public class PlayerDamage : MonoBehaviour
 
     private void Start()
     {
-        // Guardar la posicion inicial
+        // Guardar la posición inicial
         spawnPosition = transform.position;
+
+        // Buscar el componente de power-ups del mismo jugador
+        powerUps = GetComponent<PlayerShieldPowerUps>();
 
         // Inicializar vidas
         currentLives = maxLives;
@@ -55,6 +59,13 @@ public class PlayerDamage : MonoBehaviour
     {
         if (isDead || invulnerable)
             return;
+
+        // Si el escudo está activo, no se pierde una vida
+        if (powerUps != null && powerUps.EscudoActivo)
+        {
+            Debug.Log(playerName + " está protegido por el escudo.");
+            return;
+        }
 
         // Restar una vida
         // (en el modo AD tambien se resta, aunque no se muere:
@@ -89,7 +100,7 @@ public class PlayerDamage : MonoBehaviour
 
     private void Respawn()
     {
-        // Regresar a la posicion inicial
+        // Regresar a la posición inicial
         transform.position = spawnPosition;
 
         // Detener el movimiento del jugador
@@ -110,7 +121,9 @@ public class PlayerDamage : MonoBehaviour
     {
         isDead = true;
 
-        Debug.Log("GAME OVER: " + playerName + " ha perdido sus vidas");
+        Debug.Log(
+            "GAME OVER: " + playerName + " ha perdido sus vidas"
+        );
 
         gameObject.SetActive(false);
     }
@@ -140,9 +153,14 @@ public class PlayerDamage : MonoBehaviour
         invulnerable = false;
     }
 
+    // true si ahora no puede recibir daño:
+    // recien reaparecido (modo AD) o con el escudo activo
     public bool IsInvulnerable()
     {
-        return invulnerable;
+        if (invulnerable)
+            return true;
+
+        return powerUps != null && powerUps.EscudoActivo;
     }
 
     public bool IsDead()
