@@ -115,7 +115,6 @@ public class PlayerMovement : MonoBehaviour
             velocidad.x = (centro.x - rb.position.x) * 10f;
  
         rb.linearVelocity = velocidad;
-    }
-    
+    } 
     
 }

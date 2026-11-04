@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 public class PlayerDamage : MonoBehaviour
@@ -14,13 +13,16 @@ public class PlayerDamage : MonoBehaviour
 
     private int currentLives;
     private bool isDead = false;
-
     private Vector3 spawnPosition;
+    private PlayerShieldPowerUps powerUps;
 
     private void Start()
     {
-        // Guardar la posicion inicial
+        // Guardar la posición inicial
         spawnPosition = transform.position;
+
+        // Buscar el componente de power-ups del mismo jugador
+        powerUps = GetComponent<PlayerShieldPowerUps>();
 
         // Inicializar vidas
         currentLives = maxLives;
@@ -38,6 +40,13 @@ public class PlayerDamage : MonoBehaviour
     {
         if (isDead)
             return;
+
+        // Si el escudo está activo, no se pierde una vida
+        if (powerUps != null && powerUps.EscudoActivo)
+        {
+            Debug.Log(playerName + " está protegido por el escudo.");
+            return;
+        }
 
         // Restar una vida
         currentLives--;
@@ -62,7 +71,7 @@ public class PlayerDamage : MonoBehaviour
 
     private void Respawn()
     {
-        // Regresar a la posicion inicial
+        // Regresar a la posición inicial
         transform.position = spawnPosition;
 
         // Detener el movimiento del jugador
@@ -83,7 +92,9 @@ public class PlayerDamage : MonoBehaviour
     {
         isDead = true;
 
-        Debug.Log("GAME OVER: " + playerName + " ha perdido sus vidas");
+        Debug.Log(
+            "GAME OVER: " + playerName + " ha perdido sus vidas"
+        );
 
         gameObject.SetActive(false);
     }

@@ -1,4 +1,3 @@
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +8,7 @@ public class Boom : MonoBehaviour
     [Header("Configuracion de la bomba")]
     [SerializeField] private float explosionDelay = 2f;
 
-    // Casillas que alcanza la explosion en cada direccion
+    // Casillas que alcanza la explosion en cada direccion.
     [SerializeField] private int explosionRange = 2;
 
     [Header("Referencias del mapa")]
@@ -35,7 +34,7 @@ public class Boom : MonoBehaviour
 
     private void Start()
     {
-        // Buscar las referencias del mapa
+        // Buscar las referencias del mapa.
         if (grid == null)
             grid = FindAnyObjectByType<Grid>();
 
@@ -57,7 +56,7 @@ public class Boom : MonoBehaviour
                 fixedWallsTilemap = obj.GetComponent<Tilemap>();
         }
 
-        // Comprobar que todas las referencias existen
+        // Comprobar que todas las referencias existen.
         if (grid == null ||
             destructibleTilemap == null ||
             fixedWallsTilemap == null)
@@ -70,10 +69,10 @@ public class Boom : MonoBehaviour
             return;
         }
 
-        // Mostrar el aura inmediatamente
+        // Mostrar el aura inmediatamente.
         ShowWarning();
 
-        // Iniciar temporizador de explosion
+        // Iniciar temporizador de explosion.
         StartCoroutine(ExplosionTimer());
     }
 
@@ -84,7 +83,7 @@ public class Boom : MonoBehaviour
         Explode();
     }
 
-    // Calcula las casillas afectadas por la bomba
+    // Calcula las casillas afectadas por la bomba.
     private List<Vector3Int> GetAffectedCells()
     {
         List<Vector3Int> affectedCells =
@@ -93,24 +92,25 @@ public class Boom : MonoBehaviour
         Vector3Int bombCell =
             grid.WorldToCell(transform.position);
 
-        // Casilla central
+        // Casilla central.
         affectedCells.Add(bombCell);
 
-        // Hasta explosionRange casillas en cada direccion
+        // Hasta explosionRange casillas en cada direccion.
         foreach (Vector3Int direction in directions)
         {
             for (int i = 1; i <= explosionRange; i++)
             {
-                Vector3Int targetCell = bombCell + direction * i;
+                Vector3Int targetCell =
+                    bombCell + direction * i;
 
-                // Los muros fijos bloquean la explosion
+                // Los muros fijos bloquean la explosion.
                 if (fixedWallsTilemap.HasTile(targetCell))
                     break;
 
                 affectedCells.Add(targetCell);
 
-                // Un obstaculo destructible se rompe pero
-                // la explosion no sigue detras de el
+                // Un obstaculo destructible se rompe,
+                // pero la explosion no sigue detras de el.
                 if (destructibleTilemap.HasTile(targetCell))
                     break;
             }
@@ -119,7 +119,7 @@ public class Boom : MonoBehaviour
         return affectedCells;
     }
 
-    // Mostrar el aura de peligro
+    // Mostrar el aura de peligro.
     private void ShowWarning()
     {
         if (warningPrefab == null)
@@ -149,7 +149,7 @@ public class Boom : MonoBehaviour
             Quaternion.identity
         );
 
-        // Ajustar el aura al tamaño de la casilla
+        // Ajustar el aura al tamaño de la casilla.
         Vector3 cellSize = grid.cellSize;
 
         warning.transform.localScale =
@@ -158,7 +158,92 @@ public class Boom : MonoBehaviour
         warningObjects.Add(warning);
     }
 
-    // Explosion de la bomba
+    // Empujar la bomba y actualizar el aura.
+    public bool Empujar(Vector2 direccion, int distancia)
+    {
+        if (exploded || grid == null ||
+            destructibleTilemap == null ||
+            fixedWallsTilemap == null ||
+            distancia <= 0)
+        {
+            return false;
+        }
+
+        Vector3Int direccionCelda = new Vector3Int(
+            Mathf.RoundToInt(direccion.x),
+            Mathf.RoundToInt(direccion.y),
+            0
+        );
+
+        if (direccionCelda == Vector3Int.zero)
+            return false;
+
+        Vector3Int celdaInicial =
+            grid.WorldToCell(transform.position);
+
+        Vector3Int celdaDestino = celdaInicial;
+
+        for (int i = 0; i < distancia; i++)
+        {
+            Vector3Int siguiente =
+                celdaDestino + direccionCelda;
+
+            // No permite atravesar muros ni obstáculos.
+            if (fixedWallsTilemap.HasTile(siguiente) ||
+                destructibleTilemap.HasTile(siguiente))
+            {
+                break;
+            }
+
+            Vector3 centroSiguiente =
+                grid.GetCellCenterWorld(siguiente);
+
+            // No permite empujar la bomba dentro de un jugador
+            // ni de otra bomba.
+            bool ocupado = false;
+
+            Collider2D[] colliders =
+                Physics2D.OverlapPointAll(centroSiguiente);
+
+            foreach (Collider2D col in colliders)
+            {
+                if (col.GetComponentInParent<PlayerMovement>() != null)
+                {
+                    ocupado = true;
+                    break;
+                }
+
+                Boom otraBomba =
+                    col.GetComponentInParent<Boom>();
+
+                if (otraBomba != null && otraBomba != this)
+                {
+                    ocupado = true;
+                    break;
+                }
+            }
+
+            if (ocupado)
+                break;
+
+            celdaDestino = siguiente;
+        }
+
+        if (celdaDestino == celdaInicial)
+            return false;
+
+        // Quitar el aviso anterior y crearlo en la posición nueva.
+        RemoveWarnings();
+
+        transform.position =
+            grid.GetCellCenterWorld(celdaDestino);
+
+        ShowWarning();
+
+        return true;
+    }
+
+    // Explosion de la bomba.
     public void Explode()
     {
         if (exploded)
@@ -166,7 +251,7 @@ public class Boom : MonoBehaviour
 
         exploded = true;
 
-        // Comprobacion de seguridad
+        // Comprobacion de seguridad.
         if (grid == null ||
             destructibleTilemap == null ||
             fixedWallsTilemap == null)
@@ -180,14 +265,17 @@ public class Boom : MonoBehaviour
             return;
         }
 
-        // Obtener una sola vez las casillas afectadas
+        // Obtener las casillas afectadas una sola vez.
         List<Vector3Int> affectedCells =
             GetAffectedCells();
 
-        // Aplicar daño al jugador
+        // Activar las bombas que estén dentro del alcance.
+        TriggerChainReactions(affectedCells);
+
+        // Aplicar daño al jugador.
         DamagePlayers(affectedCells);
 
-        // Destruir obstaculos alcanzados
+        // Destruir los obstáculos alcanzados.
         DestructibleTilemap manager =
             destructibleTilemap.GetComponent<DestructibleTilemap>();
 
@@ -211,14 +299,38 @@ public class Boom : MonoBehaviour
             );
         }
 
-        // Eliminar el aura
+        // Eliminar el aura.
         RemoveWarnings();
 
-        // Eliminar la bomba
+        // Eliminar la bomba.
         Destroy(gameObject);
     }
 
-    // Eliminar todos los cuadrados del aura
+    // Hacer explotar inmediatamente las bombas alcanzadas.
+    private void TriggerChainReactions(
+        List<Vector3Int> affectedCells
+    )
+    {
+        Boom[] bombas = FindObjectsByType<Boom>();
+
+        foreach (Boom bomba in bombas)
+        {
+            if (bomba == null ||
+                bomba == this ||
+                bomba.exploded)
+            {
+                continue;
+            }
+
+            Vector3Int celdaBomba =
+                grid.WorldToCell(bomba.transform.position);
+
+            if (affectedCells.Contains(celdaBomba))
+                bomba.Explode();
+        }
+    }
+
+    // Eliminar todos los cuadrados del aura.
     private void RemoveWarnings()
     {
         foreach (GameObject warning in warningObjects)
@@ -230,7 +342,7 @@ public class Boom : MonoBehaviour
         warningObjects.Clear();
     }
 
-    // Comprobar si hay jugadores dentro de la explosion
+    // Comprobar si hay jugadores dentro de la explosion.
     private void DamagePlayers(List<Vector3Int> affectedCells)
     {
         PlayerDamage[] players =
@@ -242,15 +354,13 @@ public class Boom : MonoBehaviour
                 grid.WorldToCell(player.transform.position);
 
             if (affectedCells.Contains(playerCell))
-            {
                 player.TakeDamage();
-            }
         }
     }
 
     private void OnDestroy()
     {
-        // Limpieza adicional si la bomba se elimina
+        // Limpieza adicional si se elimina la bomba.
         RemoveWarnings();
     }
 }
