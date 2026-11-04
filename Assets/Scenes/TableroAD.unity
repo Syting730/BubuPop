@@ -703,6 +703,7 @@ MonoBehaviour:
   - {fileID: 1486336160}
   - {fileID: 2101079495}
   desplazamiento: {x: 0, y: 0.5, z: 0}
+  tiempoReaparicion: 10
   factorVelocidad: 0.5
   teclaSoltar: 1f000000380000000000000000000000i
   mandoDeJugador: 00000000010000000200000003000000i
@@ -6407,6 +6408,58 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!1 &1044430384
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1044430386}
+  - component: {fileID: 1044430385}
+  m_Layer: 0
+  m_Name: SpawnerEscudoAD
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1044430385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1044430384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a780709419fbe143a745b1f0c3656e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PowerUpSpawner
+  prefabPowerUp: {fileID: 4673091212637162679, guid: 7d5e8a81bc598d5498ecb9b95978f9ec, type: 3}
+  grid: {fileID: 900570083}
+  suelo: {fileID: 673295873}
+  murosFijos: {fileID: 470400505}
+  obstaculosDestructibles: {fileID: 99315164}
+  intervaloSegundos: 20
+  powerUpsPorCiclo: 1
+  maxPowerUpsEnMapa: 3
+--- !u!4 &1044430386
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1044430384}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.59341, y: 0.44891, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1106786566
 GameObject:
   m_ObjectHideFlags: 0
@@ -6814,6 +6867,58 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &1177566947
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1177566949}
+  - component: {fileID: 1177566948}
+  m_Layer: 0
+  m_Name: 'SpawnerGuanteAD '
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1177566948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1177566947}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a780709419fbe143a745b1f0c3656e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PowerUpSpawner
+  prefabPowerUp: {fileID: 1644503856115824997, guid: 7db8352ea5ba9f14d8f363393bf9c40a, type: 3}
+  grid: {fileID: 900570083}
+  suelo: {fileID: 673295873}
+  murosFijos: {fileID: 470400505}
+  obstaculosDestructibles: {fileID: 99315164}
+  intervaloSegundos: 20
+  powerUpsPorCiclo: 1
+  maxPowerUpsEnMapa: 3
+--- !u!4 &1177566949
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1177566947}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.59341, y: 0.44891, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1208737447
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6924,6 +7029,7 @@ MonoBehaviour:
   playerName: Jugador 2
   maxLives: 3
   livesUI: {fileID: 1299471875}
+  invulnerableTrasReaparecer: 2
 --- !u!114 &1208737450
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6938,6 +7044,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BombPlacer
   bombPrefab: {fileID: 1948159499756354534, guid: 8f6c0e7304f584f48be82028b1d923f5, type: 3}
   grid: {fileID: 900570083}
+  capacidadBombas: 1
   bombKey: 2
   usarTeclado: 1
 --- !u!114 &1208737451
@@ -6955,6 +7062,7 @@ MonoBehaviour:
   numeroJugador: 2
   alcanceExplosion: 2
   tiempoEntreBurbujas: 3
+  factorVelocidad: 0.6
 --- !u!1 &1237708196
 GameObject:
   m_ObjectHideFlags: 0
@@ -7740,6 +7848,58 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1328700141}
   m_CullTransparentMesh: 1
+--- !u!1 &1355424055
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1355424057}
+  - component: {fileID: 1355424056}
+  m_Layer: 0
+  m_Name: SpawnerBombaExtraAD
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1355424056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1355424055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a780709419fbe143a745b1f0c3656e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PowerUpSpawner
+  prefabPowerUp: {fileID: 1644503856115824997, guid: 01d8bbd01c9ca8a4bbd8ecb808217233, type: 3}
+  grid: {fileID: 900570083}
+  suelo: {fileID: 673295873}
+  murosFijos: {fileID: 470400505}
+  obstaculosDestructibles: {fileID: 99315164}
+  intervaloSegundos: 20
+  powerUpsPorCiclo: 1
+  maxPowerUpsEnMapa: 3
+--- !u!4 &1355424057
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1355424055}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.59341, y: 0.44891, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1418907423
 GameObject:
   m_ObjectHideFlags: 0
@@ -8212,6 +8372,7 @@ MonoBehaviour:
   playerName: Jugador 2
   maxLives: 3
   livesUI: {fileID: 1644304546}
+  invulnerableTrasReaparecer: 2
 --- !u!114 &1486336162
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8226,6 +8387,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BombPlacer
   bombPrefab: {fileID: 1948159499756354534, guid: 8f6c0e7304f584f48be82028b1d923f5, type: 3}
   grid: {fileID: 900570083}
+  capacidadBombas: 1
   bombKey: 2
   usarTeclado: 1
 --- !u!114 &1486336163
@@ -8243,6 +8405,7 @@ MonoBehaviour:
   numeroJugador: 3
   alcanceExplosion: 2
   tiempoEntreBurbujas: 3
+  factorVelocidad: 0.6
 --- !u!1 &1517335680
 GameObject:
   m_ObjectHideFlags: 0
@@ -9047,6 +9210,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BombPlacer
   bombPrefab: {fileID: 1948159499756354534, guid: 8f6c0e7304f584f48be82028b1d923f5, type: 3}
   grid: {fileID: 900570083}
+  capacidadBombas: 1
   bombKey: 1
   usarTeclado: 1
 --- !u!114 &1644458644
@@ -9064,6 +9228,7 @@ MonoBehaviour:
   playerName: Jugador 1
   maxLives: 3
   livesUI: {fileID: 1243952728}
+  invulnerableTrasReaparecer: 2
 --- !u!114 &1644458645
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9079,6 +9244,7 @@ MonoBehaviour:
   numeroJugador: 1
   alcanceExplosion: 2
   tiempoEntreBurbujas: 3
+  factorVelocidad: 0.6
 --- !u!1 &1665935156
 GameObject:
   m_ObjectHideFlags: 0
@@ -10242,6 +10408,7 @@ MonoBehaviour:
   playerName: Jugador 2
   maxLives: 3
   livesUI: {fileID: 1016112223}
+  invulnerableTrasReaparecer: 2
 --- !u!114 &2101079497
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10256,6 +10423,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BombPlacer
   bombPrefab: {fileID: 1948159499756354534, guid: 8f6c0e7304f584f48be82028b1d923f5, type: 3}
   grid: {fileID: 900570083}
+  capacidadBombas: 1
   bombKey: 2
   usarTeclado: 1
 --- !u!114 &2101079498
@@ -10273,6 +10441,7 @@ MonoBehaviour:
   numeroJugador: 4
   alcanceExplosion: 2
   tiempoEntreBurbujas: 3
+  factorVelocidad: 0.6
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -10298,3 +10467,6 @@ SceneRoots:
   - {fileID: 244720709}
   - {fileID: 297966111}
   - {fileID: 1834720360}
+  - {fileID: 1044430386}
+  - {fileID: 1177566949}
+  - {fileID: 1355424057}
