@@ -8,13 +8,18 @@ public class PlayerMovement : MonoBehaviour
     {
         InputActions, // PlayerInput + OnMove (comportamiento original)
         WASD,         // Jugador 1
-        Flechas       // Jugador 2
+        Flechas,       // Jugador 2
+        SoloMando     // Jugadores 3 y 4
     }
 
     public float speed = 5f;
 
     [Header("Controles")]
     public ControlScheme controls = ControlScheme.InputActions;
+
+    [Tooltip("Mando de este jugador: 0 = primer mando conectado, 1 = segundo... " + 
+             "-1 = no usa mando. Mismo número que en BombPlacer y Diamante")]
+    public int numeroMando = 0;
 
     // para saber donde esta el centro de cada casilla
     public Grid grid;
@@ -61,36 +66,62 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if (controls == ControlScheme.InputActions)
+      if (controls == ControlScheme.InputActions)
             return;
-
-        Keyboard keyboard = Keyboard.current;
-
-        if (keyboard == null)
-        {
-            movementInput = Vector2.zero;
-            return;
-        }
-
+ 
         Vector2 direction = Vector2.zero;
-
-        if (controls == ControlScheme.WASD)
+ 
+        // Teclado
+        Keyboard keyboard = Keyboard.current;
+ 
+        if (keyboard != null)
         {
-            if (keyboard.wKey.isPressed) direction.y += 1;
-            if (keyboard.sKey.isPressed) direction.y -= 1;
-            if (keyboard.dKey.isPressed) direction.x += 1;
-            if (keyboard.aKey.isPressed) direction.x -= 1;
+            if (controls == ControlScheme.WASD)
+            {
+                if (keyboard.wKey.isPressed) direction.y += 1;
+                if (keyboard.sKey.isPressed) direction.y -= 1;
+                if (keyboard.dKey.isPressed) direction.x += 1;
+                if (keyboard.aKey.isPressed) direction.x -= 1;
+            }
+            else if (controls == ControlScheme.Flechas)
+            {
+                if (keyboard.upArrowKey.isPressed) direction.y += 1;
+                if (keyboard.downArrowKey.isPressed) direction.y -= 1;
+                if (keyboard.rightArrowKey.isPressed) direction.x += 1;
+                if (keyboard.leftArrowKey.isPressed) direction.x -= 1;
+            }
+            // Solo mando
         }
-        else
+ 
+        // Mando: stick izquierdo o cruceta
+        Gamepad mando = MiMando();
+ 
+        if (mando != null)
         {
-            if (keyboard.upArrowKey.isPressed) direction.y += 1;
-            if (keyboard.downArrowKey.isPressed) direction.y -= 1;
-            if (keyboard.rightArrowKey.isPressed) direction.x += 1;
-            if (keyboard.leftArrowKey.isPressed) direction.x -= 1;
+            Vector2 stick = mando.leftStick.ReadValue() + mando.dpad.ReadValue();
+ 
+            // Zona muerta: si el stick apenas se mueve, no cuenta
+            if (stick.magnitude > 0.5f)
+            {
+                // Solo 4 direcciones: gana el eje en el que más se empuja
+                if (Mathf.Abs(stick.x) >= Mathf.Abs(stick.y))
+                    direction = new Vector2(Mathf.Sign(stick.x), 0);
+                else
+                    direction = new Vector2(0, Mathf.Sign(stick.y));
+            }
         }
-
-        // Misma velocidad en diagonal
+ 
         movementInput = direction;
+    }
+
+    // El mando de este jugador (null si no está conectado)
+    Gamepad MiMando()
+    {
+        if (numeroMando < 0 || numeroMando >= Gamepad.all.Count)
+            return null;
+
+        return Gamepad.all[numeroMando];
+        
     }
 
     void FixedUpdate()

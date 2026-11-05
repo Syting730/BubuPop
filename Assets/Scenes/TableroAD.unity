@@ -1127,6 +1127,10 @@ PrefabInstance:
       propertyPath: controls
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5731419178733493533, guid: 49c5348ff976b13428e350bf4e547fc5, type: 3}
+      propertyPath: numeroMando
+      value: -1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6995,6 +6999,10 @@ PrefabInstance:
       propertyPath: controls
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 5731419178733493533, guid: 49c5348ff976b13428e350bf4e547fc5, type: 3}
+      propertyPath: numeroMando
+      value: -1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7046,6 +7054,7 @@ MonoBehaviour:
   grid: {fileID: 900570083}
   capacidadBombas: 1
   bombKey: 2
+  numeroMando: 0
   usarTeclado: 1
 --- !u!114 &1208737451
 MonoBehaviour:
@@ -7062,8 +7071,12 @@ MonoBehaviour:
   numeroJugador: 2
   alcanceExplosion: 2
   tiempoEntreBurbujas: 3
+  tiempoEntreBurbujasCaza: 1
+  tiempoExplosion: 2
   factorVelocidad: 0.8
   distanciaPowerUp: 5
+  preferenciaHumanos: 6
+  estado: 
 --- !u!1 &1237708196
 GameObject:
   m_ObjectHideFlags: 0
@@ -8337,7 +8350,11 @@ PrefabInstance:
       objectReference: {fileID: 6200000, guid: d88123ce7b23a6047a1905950cca762f, type: 2}
     - target: {fileID: 5731419178733493533, guid: 49c5348ff976b13428e350bf4e547fc5, type: 3}
       propertyPath: controls
-      value: 2
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5731419178733493533, guid: 49c5348ff976b13428e350bf4e547fc5, type: 3}
+      propertyPath: numeroMando
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8390,6 +8407,7 @@ MonoBehaviour:
   grid: {fileID: 900570083}
   capacidadBombas: 1
   bombKey: 2
+  numeroMando: 0
   usarTeclado: 1
 --- !u!114 &1486336163
 MonoBehaviour:
@@ -8406,8 +8424,12 @@ MonoBehaviour:
   numeroJugador: 3
   alcanceExplosion: 2
   tiempoEntreBurbujas: 3
+  tiempoEntreBurbujasCaza: 1
+  tiempoExplosion: 2
   factorVelocidad: 0.8
   distanciaPowerUp: 5
+  preferenciaHumanos: 6
+  estado: 
 --- !u!1 &1517335680
 GameObject:
   m_ObjectHideFlags: 0
@@ -9214,6 +9236,7 @@ MonoBehaviour:
   grid: {fileID: 900570083}
   capacidadBombas: 1
   bombKey: 1
+  numeroMando: 0
   usarTeclado: 1
 --- !u!114 &1644458644
 MonoBehaviour:
@@ -9246,8 +9269,12 @@ MonoBehaviour:
   numeroJugador: 1
   alcanceExplosion: 2
   tiempoEntreBurbujas: 3
+  tiempoEntreBurbujasCaza: 1
+  tiempoExplosion: 2
   factorVelocidad: 0.8
   distanciaPowerUp: 5
+  preferenciaHumanos: 6
+  estado: 
 --- !u!1 &1665935156
 GameObject:
   m_ObjectHideFlags: 0
@@ -10375,6 +10402,10 @@ PrefabInstance:
       objectReference: {fileID: 6200000, guid: d88123ce7b23a6047a1905950cca762f, type: 2}
     - target: {fileID: 5731419178733493533, guid: 49c5348ff976b13428e350bf4e547fc5, type: 3}
       propertyPath: controls
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5731419178733493533, guid: 49c5348ff976b13428e350bf4e547fc5, type: 3}
+      propertyPath: numeroMando
       value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -10428,6 +10459,7 @@ MonoBehaviour:
   grid: {fileID: 900570083}
   capacidadBombas: 1
   bombKey: 2
+  numeroMando: 0
   usarTeclado: 1
 --- !u!114 &2101079498
 MonoBehaviour:
@@ -10444,8 +10476,12 @@ MonoBehaviour:
   numeroJugador: 4
   alcanceExplosion: 2
   tiempoEntreBurbujas: 3
+  tiempoEntreBurbujasCaza: 1
+  tiempoExplosion: 2
   factorVelocidad: 0.8
   distanciaPowerUp: 5
+  preferenciaHumanos: 6
+  estado: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

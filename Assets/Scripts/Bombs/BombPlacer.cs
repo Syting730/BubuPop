@@ -15,6 +15,9 @@ public class BombPlacer : MonoBehaviour
     [Header("Controles")]
     // Jugador 1: Space, Jugador 2: Enter
     [SerializeField] private Key bombKey = Key.E;
+    // Mando
+    [Tooltip("Mando de este jugador (0 = primer mando). -1 = sin mando")]
+    [SerializeField] private int numeroMando = 0;
 
     // IA = false para no colocar bombas con el teclado.
     public bool usarTeclado = true;
@@ -27,8 +30,15 @@ public class BombPlacer : MonoBehaviour
 
     private void Update()
     {
-        if (Keyboard.current != null &&
-            Keyboard.current[bombKey].wasPressedThisFrame)
+       bool teclado = Keyboard.current != null &&
+               bombKey != Key.None &&
+               Keyboard.current[bombKey].wasPressedThisFrame;
+
+        bool mando = numeroMando >= 0 &&
+             numeroMando < Gamepad.all.Count &&
+             Gamepad.all[numeroMando].buttonSouth.wasPressedThisFrame;
+
+        if (usarTeclado && (teclado || mando))
         {
             PlaceBomb();
         }
