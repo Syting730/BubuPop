@@ -3,14 +3,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-// Encargado de la partida en el tablero:
-// - aplica lo elegido en el menu (colores, jugadores reales / IA)
-// - pausa (boton en pantalla, Esc o Start del mando)
-// - fin de partida del modo Clasico: gana el ultimo superviviente
 public class PartidaManager : MonoBehaviour
 {
     [Header("Jugadores (en orden: J1, J2, J3, J4)")]
-    // De momento solo existen J1 y J2; J3 y J4 se dejan vacios
     [SerializeField]
     private GameObject[] jugadores =
         new GameObject[GameSettings.MaxPlayers];
@@ -21,20 +16,15 @@ public class PartidaManager : MonoBehaviour
 
     [Header("Pausa")]
     [SerializeField] private GameObject panelPausa;
-    // Boton que se ve durante la partida para pausar
     [SerializeField] private GameObject botonPausa;
 
     private bool partidaTerminada = false;
     private bool enPausa = false;
 
-    // ---------- Inicio ----------
-
-    // Awake va antes que el Start de los demas scripts
     private void Awake()
     {
         Time.timeScale = 1f;
 
-        // Si se abre el Tablero sin pasar por el menu, no tocamos nada
         if (!GameSettings.SettingsChosen)
             return;
 
@@ -52,7 +42,6 @@ public class PartidaManager : MonoBehaviour
 
     private void Start()
     {
-        // Al empezar: pantallas de fin y pausa ocultas, boton de pausa visible
         if (panelFin != null)
             panelFin.SetActive(false);
 
@@ -63,7 +52,6 @@ public class PartidaManager : MonoBehaviour
             botonPausa.SetActive(true);
     }
 
-    // Pinta el cuadrado del jugador con su color elegido
     private void PonerColor(int i)
     {
         SpriteRenderer sr =
@@ -78,9 +66,6 @@ public class PartidaManager : MonoBehaviour
         return GameSettings.SettingsChosen && i >= GameSettings.HumanPlayers;
     }
 
-   // Los jugadores IA los controla el script IA:
-    // él se encarga de moverse y de poner bombas.
-    // Aquí solo quitamos el teclado/mando para que no se peleen con los jugadores reales.
     private void ConvertirEnIA(int i)
     {
         PlayerInput input = jugadores[i].GetComponent<PlayerInput>();
@@ -90,15 +75,11 @@ public class PartidaManager : MonoBehaviour
         Debug.Log("Jugador " + (i + 1) + " es IA");
     }
 
-    // ---------- Pausa ----------
-
     private void Update()
     {
-        // Cuando la partida ha terminado no se puede pausar
         if (partidaTerminada)
             return;
 
-        // Esc / Start: si esta en pausa continua, si no, pausa
         if (PausaPulsada())
         {
             if (enPausa)
@@ -108,7 +89,6 @@ public class PartidaManager : MonoBehaviour
         }
     }
 
-    // Esc en el teclado o Start/Options en el mando
     private bool PausaPulsada()
     {
         bool teclado = Keyboard.current != null &&
@@ -120,7 +100,6 @@ public class PartidaManager : MonoBehaviour
         return teclado || mando;
     }
 
-    // Boton de pausa de la pantalla (y Esc / Start)
     public void Pausar()
     {
         if (partidaTerminada || enPausa)
@@ -128,7 +107,6 @@ public class PartidaManager : MonoBehaviour
 
         enPausa = true;
 
-        // Congelar el juego (movimiento, bombas, reaparicion de bloques)
         Time.timeScale = 0f;
 
         if (panelPausa != null)
@@ -138,7 +116,6 @@ public class PartidaManager : MonoBehaviour
             botonPausa.SetActive(false);
     }
 
-    // Opcion 1 de la pausa: "Continuar" (y Esc / Start otra vez)
     public void Continuar()
     {
         enPausa = false;
@@ -151,10 +128,6 @@ public class PartidaManager : MonoBehaviour
             botonPausa.SetActive(true);
     }
 
-    // ---------- Fin de partida (modo Clasico) ----------
-
-    // LateUpdate: si una bomba alcanza a dos jugadores
-    // en el mismo frame, se cuenta como empate
     private void LateUpdate()
     {
         if (partidaTerminada)
@@ -171,7 +144,6 @@ public class PartidaManager : MonoBehaviour
 
             participantes++;
 
-            // PlayerDamage desactiva al jugador cuando pierde las 3 vidas
             if (jugadores[i].activeSelf)
             {
                 vivos++;
@@ -179,7 +151,6 @@ public class PartidaManager : MonoBehaviour
             }
         }
 
-        // Hacen falta al menos 2 jugadores para que alguien gane
         if (participantes < 2)
             return;
 
@@ -189,15 +160,11 @@ public class PartidaManager : MonoBehaviour
             TerminarPartida("¡Empate!");
     }
 
-    // ---------- Fin de partida por tiempo (modo Asalto al Diamante) ----------
-
-    // La llama el Temporizador cuando la cuenta atras llega a 0
     public void TerminarPorTiempo()
     {
         if (partidaTerminada)
             return;
 
-        // Modo AD: gana quien tenga mas puntos
         PuntosAD puntos = FindAnyObjectByType<PuntosAD>();
 
         if (puntos == null)
@@ -220,7 +187,6 @@ public class PartidaManager : MonoBehaviour
     {
         partidaTerminada = true;
 
-        // Congelar el juego (movimiento y bombas)
         Time.timeScale = 0f;
 
         Debug.Log("Fin de la partida: " + mensaje);
@@ -231,13 +197,10 @@ public class PartidaManager : MonoBehaviour
         if (textoGanador != null)
             textoGanador.text = mensaje;
 
-        // Ya no se puede pausar
         if (botonPausa != null)
             botonPausa.SetActive(false);
     }
 
-    // Todos se llaman igual, sean jugadores reales o IA:
-    // "Jugador 3 (Azul)"
     private string NombreJugador(int i)
     {
         string nombre = "Jugador " + (i + 1);
@@ -248,20 +211,13 @@ public class PartidaManager : MonoBehaviour
         return nombre;
     }
 
-    // ---------- Botones (pantalla de fin y de pausa) ----------
-
-    // Opcion 2 de la pausa: "Reiniciar"
-    // y "Volver a jugar" de la pantalla de fin
     public void VolverAJugar()
     {
         Time.timeScale = 1f;
 
-        // Se recarga el tablero con la misma configuracion
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    // Opcion 3 de la pausa: "Menu principal"
-    // y "Menu principal" de la pantalla de fin
     public void MenuPrincipal()
     {
         Time.timeScale = 1f;
@@ -269,7 +225,6 @@ public class PartidaManager : MonoBehaviour
         SceneManager.LoadScene("Menu inicio");
     }
 
-    // Numero (0-3) de un jugador, o -1 si no es un jugador
     public int IndiceDe(GameObject jugador)
     {
         for (int i = 0; i < jugadores.Length; i++)
@@ -281,7 +236,6 @@ public class PartidaManager : MonoBehaviour
         return -1;
     }
 
-    // "Jugador 1 (Rojo)"
     public string NombreDe(int i)
     {
         return NombreJugador(i);

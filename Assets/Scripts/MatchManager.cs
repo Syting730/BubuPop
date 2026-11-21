@@ -4,12 +4,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-// Controla la partida 1v1: cuando solo queda un jugador vivo
-// se acaba la partida y se muestra el ganador.
 public class MatchManager : MonoBehaviour
 {
     [Header("Interfaz (opcional)")]
-    // Si no se asigna, el resultado se dibuja con OnGUI
     [SerializeField] private TMP_Text resultText;
 
     [Header("Reinicio")]
@@ -22,8 +19,6 @@ public class MatchManager : MonoBehaviour
 
     private void Start()
     {
-        // Guardar los jugadores al empezar, porque al morir
-        // se desactivan y ya no se pueden buscar
         players.AddRange(FindObjectsByType<PlayerDamage>());
 
         if (players.Count < 2)
@@ -37,8 +32,6 @@ public class MatchManager : MonoBehaviour
             resultText.gameObject.SetActive(false);
     }
 
-    // LateUpdate para que, si una bomba alcanza a los dos
-    // en el mismo frame, se cuente como empate
     private void LateUpdate()
     {
         if (matchOver)
@@ -76,7 +69,6 @@ public class MatchManager : MonoBehaviour
 
         Debug.Log("Fin de la partida: " + message);
 
-        // Congelar el juego (bombas y movimiento)
         Time.timeScale = 0f;
 
         if (resultText != null)
@@ -101,7 +93,6 @@ public class MatchManager : MonoBehaviour
         if (!matchOver || resultText != null)
             return;
 
-        // Tamaño de letra proporcional a la pantalla
         int bigSize = Mathf.Max(24, Screen.height / 10);
         int smallSize = bigSize / 2;
 
@@ -112,7 +103,6 @@ public class MatchManager : MonoBehaviour
         style.richText = true;
         style.normal.textColor = Color.white;
 
-        // Fondo oscuro para que se lea bien encima del tablero
         Rect area = new Rect(0, Screen.height * 0.3f,
                              Screen.width, Screen.height * 0.4f);
         Color previous = GUI.color;

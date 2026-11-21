@@ -1,12 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-// SOLO PARA PROBAR (escena de pruebas, mientras no esta el tablero nuevo).
-// Ponerlo en el mismo objeto que VidaBoss y PuntosBoss y darle a Play:
-// - teclas 1, 2, 3, 4: el jugador J1..J4 da un impacto al Boss
-// - tecla F: el Boss quema a J1 (-3 puntos)
-// - tecla R: reinicia la vida del Boss
-// Los resultados salen en la Console. El cubo cambia de color con la fase.
 public class ProbarBoss : MonoBehaviour
 {
     private VidaBoss boss;
@@ -46,7 +40,6 @@ public class ProbarBoss : MonoBehaviour
         }
     }
 
-    // Fase 1 amarillo, fase 2 naranja, fase 3 rojo
     private void Pintar(int fase)
     {
         Color color = fase == 1 ? Color.yellow

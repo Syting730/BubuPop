@@ -1,9 +1,6 @@
 using NUnit.Framework;
 using UnityEngine;
 
-// Tests de las tarjetas "Lab3 - MB - Tabla de puntuaciones"
-// y "Lab3 - MB - Fases del Boss".
-// Se ejecutan en Window > General > Test Runner > EditMode > Run All.
 public class BossTests
 {
     private GameObject objeto;
@@ -24,14 +21,11 @@ public class BossTests
         Object.DestroyImmediate(objeto);
     }
 
-    // Da n impactos al Boss con el jugador indicado
     private void Impactos(int jugador, int n)
     {
         for (int i = 0; i < n; i++)
             boss.RecibirImpacto(jugador);
     }
-
-    // ---------- Tabla de puntuaciones ----------
 
     [Test]
     public void ImpactoAlBoss_Da3Puntos()
@@ -43,7 +37,6 @@ public class BossTests
     [Test]
     public void GolpeFinal_Da15Puntos()
     {
-        // 19 impactos de J2, el 20.º (golpe final) de J1
         Impactos(1, 19);
         boss.RecibirImpacto(0);
 
@@ -88,8 +81,6 @@ public class BossTests
         Assert.AreEqual(0, puntos.GetPuntos(0));
     }
 
-    // ---------- Fases del Boss ----------
-
     [Test]
     public void Boss_Empieza60HP_Fase1()
     {
@@ -109,13 +100,13 @@ public class BossTests
     [Test]
     public void ConImpactos_PasaPorLas3Fases()
     {
-        Impactos(0, 10);                 // 30 HP
+        Impactos(0, 10);
         Assert.AreEqual(1, boss.GetFase());
 
-        boss.RecibirImpacto(0);          // 27 HP
+        boss.RecibirImpacto(0);
         Assert.AreEqual(2, boss.GetFase());
 
-        Impactos(0, 3);                  // 18 HP
+        Impactos(0, 3);
         Assert.AreEqual(3, boss.GetFase());
         Assert.IsTrue(boss.HayErupcion());
     }
@@ -126,9 +117,9 @@ public class BossTests
         int veces = 0;
         boss.alCambiarFase.AddListener(f => veces++);
 
-        Impactos(0, 20);                 // de 60 a 0 HP
+        Impactos(0, 20);
 
-        Assert.AreEqual(2, veces);       // fase 2 y fase 3
+        Assert.AreEqual(2, veces);
     }
 
     [Test]
@@ -137,7 +128,7 @@ public class BossTests
         Assert.AreEqual(1f, boss.DuracionFuego());
         Assert.AreEqual(5f, boss.PausaFuego());
 
-        Impactos(0, 11);                 // fase 2
+        Impactos(0, 11);
         Assert.AreEqual(2f, boss.DuracionFuego());
         Assert.AreEqual(3f, boss.PausaFuego());
         Assert.IsFalse(boss.HayErupcion());

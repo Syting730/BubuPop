@@ -13,7 +13,6 @@ public class PlayerGlovePowerUp : MonoBehaviour
 
     public int GuantesDisponibles => guantesDisponibles;
 
-    // ia
     public bool usarTeclado = true;
 
     private void Awake()

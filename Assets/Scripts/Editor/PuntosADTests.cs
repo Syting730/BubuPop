@@ -1,8 +1,6 @@
 using NUnit.Framework;
 using UnityEngine;
 
-// Tests de la tarjeta "Lab2 - Modo AD - Tabla Puntuaciones".
-// Se ejecutan en Window > General > Test Runner > EditMode > Run All.
 public class PuntosADTests
 {
     private GameObject objeto;
