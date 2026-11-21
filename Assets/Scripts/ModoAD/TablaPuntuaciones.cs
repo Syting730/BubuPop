@@ -8,6 +8,7 @@ using UnityEngine;
 // - los puestos se calculan ordenando de mas a menos puntos;
 //   si dos jugadores tienen los mismos puntos, comparten puesto
 // - se actualiza sola cada vez que alguien gana puntos (PuntosAD)
+// - tambien sirve para el modo Boss Volcan (lee PuntosBoss si no hay PuntosAD)
 // - opcional: la tabla completa ordenada en la pantalla de fin
 public class TablaPuntuaciones : MonoBehaviour
 {
@@ -21,6 +22,9 @@ public class TablaPuntuaciones : MonoBehaviour
     [Tooltip("Si se deja vacio, se busca solo en la escena")]
     [SerializeField] private PuntosAD puntos;
 
+    [Tooltip("Modo Boss: si se deja vacio, se busca solo en la escena")]
+    [SerializeField] private PuntosBoss puntosBoss;
+
     [Tooltip("Si se deja vacio, se busca solo en la escena")]
     [SerializeField] private PartidaManager partidaManager;
 
@@ -31,17 +35,23 @@ public class TablaPuntuaciones : MonoBehaviour
         if (puntos == null)
             puntos = FindAnyObjectByType<PuntosAD>();
 
+        if (puntos == null && puntosBoss == null)
+            puntosBoss = FindAnyObjectByType<PuntosBoss>();
+
         if (partidaManager == null)
             partidaManager = FindAnyObjectByType<PartidaManager>();
 
-        if (puntos == null)
+        if (puntos == null && puntosBoss == null)
         {
-            Debug.LogWarning("TablaPuntuaciones: no hay PuntosAD en la escena");
+            Debug.LogWarning("TablaPuntuaciones: no hay PuntosAD ni PuntosBoss en la escena");
             return;
         }
 
         // Cada vez que cambian los puntos, se repinta la tabla
-        puntos.alCambiarPuntos.AddListener(AlCambiarPuntos);
+        if (puntos != null)
+            puntos.alCambiarPuntos.AddListener(AlCambiarPuntos);
+        else
+            puntosBoss.alCambiarPuntos.AddListener(AlCambiarPuntos);
 
         Actualizar();
     }
@@ -50,6 +60,9 @@ public class TablaPuntuaciones : MonoBehaviour
     {
         if (puntos != null)
             puntos.alCambiarPuntos.RemoveListener(AlCambiarPuntos);
+
+        if (puntosBoss != null)
+            puntosBoss.alCambiarPuntos.RemoveListener(AlCambiarPuntos);
     }
 
     private void AlCambiarPuntos(int jugador, int total)
@@ -61,12 +74,13 @@ public class TablaPuntuaciones : MonoBehaviour
 
     public void Actualizar()
     {
-        if (puntos == null)
+        if (puntos == null && puntosBoss == null)
             return;
 
         int[] lista = new int[GameSettings.MaxPlayers];
         for (int i = 0; i < lista.Length; i++)
-            lista[i] = puntos.GetPuntos(i);
+            lista[i] = puntos != null ? puntos.GetPuntos(i)
+                                      : puntosBoss.GetPuntos(i);
 
         List<int> orden = Ordenar(lista);
         int[] puestos = Puestos(lista, orden);
