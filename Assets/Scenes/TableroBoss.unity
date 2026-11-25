@@ -5204,6 +5204,7 @@ GameObject:
   - component: {fileID: 767066203}
   - component: {fileID: 767066202}
   - component: {fileID: 767066201}
+  - component: {fileID: 767066204}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Untagged
@@ -5405,6 +5406,24 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &767066204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 767066197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 963d2e178a8e1864c82d96d5fedee962, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Fuego
+  boss: {fileID: 0}
+  aviso: {fileID: 0}
+  puntos: {fileID: 0}
+  volcan: {fileID: 0}
+  prefabFuego: {fileID: 0}
+  radioVolcan: 0
 --- !u!1 &894458637
 GameObject:
   m_ObjectHideFlags: 0
@@ -9797,6 +9816,67 @@ MonoBehaviour:
   distanciaPowerUp: 5
   preferenciaHumanos: 6
   estado: 
+--- !u!1001 &6684584012206034532
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4220304628109658474, guid: 1bf18351066970f49813747d4dea16ed, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 9.81823
+      objectReference: {fileID: 0}
+    - target: {fileID: 4220304628109658474, guid: 1bf18351066970f49813747d4dea16ed, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.35069
+      objectReference: {fileID: 0}
+    - target: {fileID: 4220304628109658474, guid: 1bf18351066970f49813747d4dea16ed, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4220304628109658474, guid: 1bf18351066970f49813747d4dea16ed, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4220304628109658474, guid: 1bf18351066970f49813747d4dea16ed, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4220304628109658474, guid: 1bf18351066970f49813747d4dea16ed, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4220304628109658474, guid: 1bf18351066970f49813747d4dea16ed, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4220304628109658474, guid: 1bf18351066970f49813747d4dea16ed, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4220304628109658474, guid: 1bf18351066970f49813747d4dea16ed, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4220304628109658474, guid: 1bf18351066970f49813747d4dea16ed, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7751777796286283833, guid: 1bf18351066970f49813747d4dea16ed, type: 3}
+      propertyPath: m_Name
+      value: AvisoSuelo
+      objectReference: {fileID: 0}
+    - target: {fileID: 8513765862619527639, guid: 1bf18351066970f49813747d4dea16ed, type: 3}
+      propertyPath: prefabAviso
+      value: 
+      objectReference: {fileID: 622533300543541016, guid: a22169eee354554479127722feacddfa, type: 3}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1bf18351066970f49813747d4dea16ed, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -9820,3 +9900,4 @@ SceneRoots:
   - {fileID: 1177566949}
   - {fileID: 1355424057}
   - {fileID: 767066200}
+  - {fileID: 6684584012206034532}
