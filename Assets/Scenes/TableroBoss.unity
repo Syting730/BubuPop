@@ -119,6 +119,54 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &45104104
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 45104106}
+  - component: {fileID: 45104107}
+  m_Layer: 0
+  m_Name: AvisoSuelo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &45104106
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 45104104}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 9.81823, y: -0.35069, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &45104107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 45104104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e415653acfceef4390c2da397083309, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AvisoSuelo
+  prefabAviso: {fileID: 622533300543541016, guid: a22169eee354554479127722feacddfa, type: 3}
+  color: {r: 1, g: 0, b: 0, a: 0.6}
+  duracion: 1
+  grid: {fileID: 0}
 --- !u!1 &99315161
 GameObject:
   m_ObjectHideFlags: 0
@@ -9816,67 +9864,6 @@ MonoBehaviour:
   distanciaPowerUp: 5
   preferenciaHumanos: 6
   estado: 
---- !u!1001 &6684584012206034532
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4220304628109658474, guid: 1bf18351066970f49813747d4dea16ed, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 9.81823
-      objectReference: {fileID: 0}
-    - target: {fileID: 4220304628109658474, guid: 1bf18351066970f49813747d4dea16ed, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.35069
-      objectReference: {fileID: 0}
-    - target: {fileID: 4220304628109658474, guid: 1bf18351066970f49813747d4dea16ed, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4220304628109658474, guid: 1bf18351066970f49813747d4dea16ed, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4220304628109658474, guid: 1bf18351066970f49813747d4dea16ed, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4220304628109658474, guid: 1bf18351066970f49813747d4dea16ed, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4220304628109658474, guid: 1bf18351066970f49813747d4dea16ed, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4220304628109658474, guid: 1bf18351066970f49813747d4dea16ed, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4220304628109658474, guid: 1bf18351066970f49813747d4dea16ed, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4220304628109658474, guid: 1bf18351066970f49813747d4dea16ed, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7751777796286283833, guid: 1bf18351066970f49813747d4dea16ed, type: 3}
-      propertyPath: m_Name
-      value: AvisoSuelo
-      objectReference: {fileID: 0}
-    - target: {fileID: 8513765862619527639, guid: 1bf18351066970f49813747d4dea16ed, type: 3}
-      propertyPath: prefabAviso
-      value: 
-      objectReference: {fileID: 622533300543541016, guid: a22169eee354554479127722feacddfa, type: 3}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 1bf18351066970f49813747d4dea16ed, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -9900,4 +9887,4 @@ SceneRoots:
   - {fileID: 1177566949}
   - {fileID: 1355424057}
   - {fileID: 767066200}
-  - {fileID: 6684584012206034532}
+  - {fileID: 45104106}
