@@ -2,11 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-// Hace aparecer cristales pequeños en casillas libres del tablero
-// (modo Asalto al Diamante). Cada cristal da 2 puntos (ver Cristal).
-// Va en un objeto vacio de la escena TableroAD.
-// No hace falta ningun prefab: el cristal se dibuja como un
-// rombo de color creado por codigo.
 public class GeneradorCristales : MonoBehaviour
 {
     [Header("Mapa (si se dejan vacios, se buscan por nombre)")]
@@ -39,7 +34,6 @@ public class GeneradorCristales : MonoBehaviour
         if (suelo == null)
             Debug.LogError("GeneradorCristales: no encuentro el Suelo");
 
-        // Cuadrado blanco de 1x1 (luego se gira 45º y se pinta)
         sprite = Sprite.Create(
             Texture2D.whiteTexture,
             new Rect(0, 0, Texture2D.whiteTexture.width, Texture2D.whiteTexture.height),
@@ -54,7 +48,6 @@ public class GeneradorCristales : MonoBehaviour
         if (suelo == null)
             return;
 
-        // Time.deltaTime vale 0 en pausa: no salen cristales
         contador -= Time.deltaTime;
         if (contador > 0f)
             return;
@@ -103,7 +96,6 @@ public class GeneradorCristales : MonoBehaviour
         cristales.Add(cristal);
     }
 
-    // Suelo sin muro, sin obstaculo, sin cristal y sin nadie encima
     private bool CasillaLibre(Vector3Int celda)
     {
         if (!suelo.HasTile(celda))
@@ -123,9 +115,9 @@ public class GeneradorCristales : MonoBehaviour
         foreach (Collider2D hit in hits)
         {
             if (hit.isTrigger && hit.GetComponent<Base>() != null)
-                continue; // en las bases si pueden salir
+                continue;
 
-            return false; // jugador, bomba, diamante u otro cristal
+            return false;
         }
 
         return true;

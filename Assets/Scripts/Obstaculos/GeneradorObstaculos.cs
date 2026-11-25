@@ -2,22 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-// Genera obstaculos destructibles al azar al empezar la partida.
-// Va en el objeto ObstaculosDestructibles (el Tilemap donde se pintan).
-// Sirve para los dos tableros (Tablero y TableroAD):
-// - solo pinta encima del Suelo y nunca encima de un Muro Fijo
-// - deja libre la zona de salida de cada jugador (4 jugadores)
-// - en el modo AD deja libres las bases y la casilla del diamante
-// - modo Equilibrado: cada jugador recibe los mismos obstaculos
-//   cerca y lejos de su salida (para que nadie tenga ventaja)
-// - no pone mas de maxEnFila obstaculos en fila ni grupos 2x2,
-//   para que ningun camino quede muy cerrado
-// - todos los jugadores tienen que romper los mismos obstaculos
-//   para llegar al centro del tablero (donde esta el diamante)
-// - modo AD: el diamante queda encerrado por un anillo de obstaculos
-//   y cada jugador tiene un camino libre, igual de largo, hasta el anillo
-// Los obstaculos generados se rompen y reaparecen igual que los
-// pintados a mano (eso lo hace DestructibleTilemap).
 [RequireComponent(typeof(Tilemap))]
 public class GeneradorObstaculos : MonoBehaviour
 {
@@ -30,8 +14,8 @@ public class GeneradorObstaculos : MonoBehaviour
 
     public enum Modo
     {
-        Aleatorio,   // cada casilla al azar (puede salir injusto)
-        Equilibrado  // misma cantidad de obstaculos para cada jugador
+        Aleatorio,
+        Equilibrado
     }
 
     [Header("Reparto")]
@@ -85,10 +69,8 @@ public class GeneradorObstaculos : MonoBehaviour
     private Tilemap obstaculos;
     private List<Vector3Int> salidas = new List<Vector3Int>();
 
-    // Obstaculos del anillo del diamante (no se quitan al igualar)
     private HashSet<Vector3Int> anillo = new HashSet<Vector3Int>();
 
-    // Start: asi los jugadores y las bases ya estan colocados
     private void Start()
     {
         obstaculos = GetComponent<Tilemap>();
@@ -118,12 +100,10 @@ public class GeneradorObstaculos : MonoBehaviour
     {
         HashSet<Vector3Int> libres = CasillasQueDebenQuedarLibres();
 
-        // Primero el anillo, para que el resto se reparta respetandolo
         if (rodearDiamante && FindAnyObjectByType<Diamante>() != null)
             PonerAnilloDiamante();
         List<Vector3Int> candidatas = new List<Vector3Int>();
 
-        // Recorremos todo el suelo (asi no hay que escribir los limites a mano)
         BoundsInt limites = suelo.cellBounds;
 
         foreach (Vector3Int celda in limites.allPositionsWithin)
@@ -159,8 +139,6 @@ public class GeneradorObstaculos : MonoBehaviour
                   pintados + " obstaculos generados");
     }
 
-    // ---------- Modo Aleatorio ----------
-
     private int GenerarAleatorio(List<Vector3Int> casillas)
     {
         int pintados = 0;
@@ -177,19 +155,8 @@ public class GeneradorObstaculos : MonoBehaviour
         return pintados;
     }
 
-    // ---------- Modo Equilibrado ----------
-    // 1. Cada casilla es del jugador cuya salida esta mas cerca.
-    //    Si esta igual de cerca de varios, es "neutral".
-    // 2. Las casillas de cada jugador se separan en anillos
-    //    segun lo lejos que estan de su salida.
-    // 3. En cada anillo, todos los jugadores reciben la misma
-    //    cantidad de obstaculos (la que corresponde al que menos
-    //    casillas tiene en ese anillo), en sitios al azar.
-    // 4. Las neutrales se rellenan al azar como en modo Aleatorio.
-
     private int GenerarEquilibrado(List<Vector3Int> candidatas)
     {
-        // grupos[anillo][jugador] = casillas
         Dictionary<int, List<Vector3Int>[]> grupos =
             new Dictionary<int, List<Vector3Int>[]>();
         List<Vector3Int> neutrales = new List<Vector3Int>();
@@ -238,7 +205,6 @@ public class GeneradorObstaculos : MonoBehaviour
 
         foreach (List<Vector3Int>[] anillo in grupos.Values)
         {
-            // El jugador con menos casillas en este anillo marca el limite
             int menos = int.MaxValue;
             foreach (List<Vector3Int> casillas in anillo)
                 menos = Mathf.Min(menos, casillas.Count);
@@ -249,8 +215,6 @@ public class GeneradorObstaculos : MonoBehaviour
             {
                 Barajar(casillas);
 
-                // Se van probando casillas al azar hasta poner la
-                // cantidad, saltando las que bloquearian un camino
                 int puestos = 0;
 
                 foreach (Vector3Int celda in casillas)
@@ -272,11 +236,8 @@ public class GeneradorObstaculos : MonoBehaviour
         return pintados;
     }
 
-    // ---------- Evitar caminos bloqueados ----------
-
     private bool PuedePoner(Vector3Int celda)
     {
-        // Obstaculos seguidos en fila y en columna contando este
         int fila = 1 + Seguidos(celda, Vector3Int.left) + Seguidos(celda, Vector3Int.right);
         int columna = 1 + Seguidos(celda, Vector3Int.up) + Seguidos(celda, Vector3Int.down);
 
@@ -303,7 +264,6 @@ public class GeneradorObstaculos : MonoBehaviour
         return cuenta;
     }
 
-    // ¿Completaria un cuadrado de 2x2 obstaculos?
     private bool FormaCuadrado(Vector3Int celda)
     {
         for (int dx = -1; dx <= 0; dx++)
@@ -331,18 +291,11 @@ public class GeneradorObstaculos : MonoBehaviour
         return false;
     }
 
-    // ---------- Mismo camino al centro para todos ----------
-    // Para cada jugador se busca el camino hasta el centro en el que
-    // hay que romper menos obstaculos. Si a alguno le cuesta mas que
-    // a otro, se quita un obstaculo de su camino, y se repite hasta
-    // que a todos les cueste lo mismo.
-
     private int IgualarCaminos()
     {
         Vector3Int centro = CentroDelSuelo();
         int quitados = 0;
 
-        // Limite de seguridad para no quedarse en un bucle infinito
         for (int vuelta = 0; vuelta < 200; vuelta++)
         {
             List<Vector3Int>[] caminos = new List<Vector3Int>[salidas.Count];
@@ -362,8 +315,6 @@ public class GeneradorObstaculos : MonoBehaviour
                 if (caminos[i] == null || caminos[i].Count == menor)
                     continue;
 
-                // Quitar un obstaculo al azar de su camino
-                // (nunca uno del anillo del diamante)
                 List<Vector3Int> quitables = new List<Vector3Int>();
                 foreach (Vector3Int o in caminos[i])
                 {
@@ -378,7 +329,7 @@ public class GeneradorObstaculos : MonoBehaviour
                 Vector3Int celda = quitables[Random.Range(0, quitables.Count)];
                 obstaculos.SetTile(celda, null);
                 quitados++;
-                break; // volver a calcular todos los caminos
+                break;
             }
 
             if (todosIguales)
@@ -392,9 +343,6 @@ public class GeneradorObstaculos : MonoBehaviour
         return quitados;
     }
 
-    // Camino en el que hay que romper menos obstaculos (los muros
-    // fijos no se pueden cruzar). Devuelve los obstaculos de ese
-    // camino, o null si no se puede llegar.
     private List<Vector3Int> ObstaculosEnMejorCamino(Vector3Int desde, Vector3Int hasta)
     {
         Dictionary<Vector3Int, int> coste = new Dictionary<Vector3Int, int>();
@@ -409,8 +357,6 @@ public class GeneradorObstaculos : MonoBehaviour
             Vector3Int.up, Vector3Int.down, Vector3Int.left, Vector3Int.right
         };
 
-        // Casillas libres cuestan 0 y obstaculos 1: las de coste 0
-        // van delante en la cola y las de coste 1 detras
         while (cola.Count > 0)
         {
             Vector3Int actual = cola.First.Value;
@@ -445,7 +391,6 @@ public class GeneradorObstaculos : MonoBehaviour
         if (!coste.ContainsKey(hasta))
             return null;
 
-        // Volver hacia atras apuntando los obstaculos del camino
         List<Vector3Int> enCamino = new List<Vector3Int>();
         Vector3Int c = hasta;
 
@@ -459,11 +404,6 @@ public class GeneradorObstaculos : MonoBehaviour
 
         return enCamino;
     }
-
-    // ---------- Anillo del diamante (modo AD) ----------
-    // Obstaculos en todas las casillas justo fuera de la zona libre
-    // del diamante. Asi cualquier camino hacia el diamante tiene que
-    // romper uno, sea cual sea el jugador.
 
     private void PonerAnilloDiamante()
     {
@@ -491,15 +431,6 @@ public class GeneradorObstaculos : MonoBehaviour
                   anillo.Count + " obstaculos");
     }
 
-    // ---------- Camino libre hasta el anillo (modo AD) ----------
-    // 1. Se calcula, solo con los muros fijos, a cuantos pasos esta
-    //    cada casilla del anillo.
-    // 2. Desde la salida de cada jugador se baja paso a paso hasta el
-    //    anillo por uno de los caminos mas cortos (elegido al azar) y
-    //    se quitan los obstaculos de ese camino.
-    // Como en TableroAD todos estan a la misma distancia del diamante,
-    // todos llegan al anillo con los mismos pasos y sin romper nada.
-
     private int AbrirCaminosAlAnillo()
     {
         Dictionary<Vector3Int, int> pasos = PasosHastaAnillo();
@@ -524,7 +455,6 @@ public class GeneradorObstaculos : MonoBehaviour
             Debug.Log("GeneradorObstaculos: jugador " + (i + 1) + " esta a " +
                       pasos[actual] + " pasos del anillo");
 
-            // Bajar hasta la casilla que toca el anillo (pasos = 1)
             while (pasos[actual] > 1)
             {
                 List<Vector3Int> siguientes = new List<Vector3Int>();
@@ -549,8 +479,6 @@ public class GeneradorObstaculos : MonoBehaviour
         return quitados;
     }
 
-    // Pasos desde cada casilla hasta el anillo, contando solo los muros
-    // fijos (los obstaculos destructibles no cuentan)
     private Dictionary<Vector3Int, int> PasosHastaAnillo()
     {
         Dictionary<Vector3Int, int> pasos = new Dictionary<Vector3Int, int>();
@@ -579,7 +507,6 @@ public class GeneradorObstaculos : MonoBehaviour
                 if (!suelo.HasTile(vecina) || murosFijos.HasTile(vecina))
                     continue;
 
-                // No entrar en la zona de dentro del anillo
                 if (Distancia(vecina, centro) <= radioDiamante)
                     continue;
 
@@ -602,7 +529,6 @@ public class GeneradorObstaculos : MonoBehaviour
         return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
     }
 
-    // Mezcla la lista al azar (Fisher-Yates)
     private void Barajar(List<Vector3Int> lista)
     {
         for (int i = lista.Count - 1; i > 0; i--)
@@ -614,13 +540,10 @@ public class GeneradorObstaculos : MonoBehaviour
         }
     }
 
-    // ---------- Zonas libres ----------
-
     private HashSet<Vector3Int> CasillasQueDebenQuedarLibres()
     {
         HashSet<Vector3Int> libres = new HashSet<Vector3Int>();
 
-        // Salida de cada jugador (los que esten en la escena, sean 2 o 4)
         foreach (PlayerMovement jugador in
                  FindObjectsByType<PlayerMovement>())
         {
@@ -629,7 +552,6 @@ public class GeneradorObstaculos : MonoBehaviour
             AnadirRombo(libres, salida, radioSalida);
         }
 
-        // Bases del modo AD: toda la zona que ocupan
         foreach (Base b in FindObjectsByType<Base>())
         {
             Collider2D zona = b.GetComponent<Collider2D>();
@@ -637,8 +559,6 @@ public class GeneradorObstaculos : MonoBehaviour
                 AnadirZona(libres, zona.bounds);
         }
 
-        // Diamante del modo AD: va en la casilla central del suelo
-        // (mismo calculo que hace el Diamante)
         if (FindAnyObjectByType<Diamante>() != null)
         {
             BoundsInt l = suelo.cellBounds;
@@ -653,7 +573,6 @@ public class GeneradorObstaculos : MonoBehaviour
         return libres;
     }
 
-    // Casillas a una distancia <= radio (moviendose en horizontal y vertical)
     private void AnadirRombo(HashSet<Vector3Int> libres, Vector3Int centro, int radio)
     {
         for (int dx = -radio; dx <= radio; dx++)
@@ -666,7 +585,6 @@ public class GeneradorObstaculos : MonoBehaviour
         }
     }
 
-    // Todas las casillas cuyo centro cae dentro de una zona
     private void AnadirZona(HashSet<Vector3Int> libres, Bounds zona)
     {
         Vector3Int min = suelo.WorldToCell(zona.min);
@@ -679,7 +597,6 @@ public class GeneradorObstaculos : MonoBehaviour
                 Vector3Int celda = new Vector3Int(x, y, 0);
                 Vector3 c = suelo.GetCellCenterWorld(celda);
 
-                // Solo se mira x e y (en 2D la z no importa)
                 if (c.x >= zona.min.x && c.x <= zona.max.x &&
                     c.y >= zona.min.y && c.y <= zona.max.y)
                 {

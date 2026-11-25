@@ -1,4 +1,3 @@
-
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -25,12 +24,10 @@ public class DestructibleTilemap : MonoBehaviour
         if (originalTile == null)
             return false;
 
-        // Eliminar el obstáculo
         tilemap.SetTile(cell, null);
 
         Debug.Log("Obstáculo destruido en: " + cell);
 
-        // Comenzar la cuenta atrás
         StartCoroutine(RespawnBlock(cell, originalTile));
 
         return true;
@@ -40,16 +37,13 @@ public class DestructibleTilemap : MonoBehaviour
         Vector3Int cell,
         TileBase originalTile)
     {
-        // Esperar 20 segundos
         yield return new WaitForSeconds(respawnTime);
 
-        // Si hay alguien en la casilla, esperar
         while (IsCellOccupied(cell))
         {
             yield return new WaitForSeconds(0.5f);
         }
 
-        // Restaurar el obstáculo
         if (!tilemap.HasTile(cell))
         {
             tilemap.SetTile(cell, originalTile);
@@ -74,11 +68,9 @@ public class DestructibleTilemap : MonoBehaviour
 
         foreach (Collider2D hit in colliders)
         {
-            // No reaparecer si hay un jugador
             if (hit.GetComponentInParent<PlayerMovement>() != null)
                 return true;
 
-            // No reaparecer si hay una bomba
             if (hit.GetComponentInParent<Boom>() != null)
                 return true;
         }

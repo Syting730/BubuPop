@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-// Menu de inicio: pantalla principal con 3 elecciones + START
 public class MenuInicio : MonoBehaviour
 {
     [Header("Pantallas")]
@@ -23,15 +22,12 @@ public class MenuInicio : MonoBehaviour
 
     [Header("Pantalla de color")]
     [SerializeField] private TMP_Text tituloColor;
-    // En orden: Rojo, Amarillo, Azul, Verde
     [SerializeField] private Button[] botonesColor;
 
-    // Que se ha elegido ya
     private bool modoElegido = false;
     private bool jugadoresElegidos = false;
     private bool personajeElegido = false;
 
-    // Eleccion de colores por turnos
     private int jugadorEligiendo = 0;
     private bool[] colorUsado = new bool[GameSettings.MaxPlayers];
 
@@ -40,8 +36,6 @@ public class MenuInicio : MonoBehaviour
         MostrarPanel(panelPrincipal);
         ActualizarPrincipal();
     }
-
-    // ---------- Pantalla principal ----------
 
     public void AbrirModo()
     {
@@ -59,14 +53,12 @@ public class MenuInicio : MonoBehaviour
         MostrarPanel(panelPersonaje);
     }
 
-    // Boton "Volver" de cualquier pantalla
     public void VolverAlPrincipal()
     {
         MostrarPanel(panelPrincipal);
         ActualizarPrincipal();
     }
 
-    // Boton START (solo se puede pulsar cuando esta activado)
     public void PulsarStart()
     {
         string colores = "";
@@ -79,15 +71,13 @@ public class MenuInicio : MonoBehaviour
 
         GameSettings.SettingsChosen = true;
 
-        // Cada modo tiene su escena
-        // (Boss Volcan todavia no existe: de momento usa el Tablero clasico)
         if (GameSettings.SelectedMode == GameSettings.GameMode.AsaltoDiamante)
             SceneManager.LoadScene("TableroAD");
+        else if (GameSettings.SelectedMode == GameSettings.GameMode.BossVolcan)
+            SceneManager.LoadScene("TableroBoss");
         else
             SceneManager.LoadScene("Tablero");
     }
-
-    // ---------- Pantalla de Modo ----------
 
     public void ElegirClasico()
     {
@@ -111,12 +101,8 @@ public class MenuInicio : MonoBehaviour
         VolverAlPrincipal();
     }
 
-    // ---------- Pantalla de Nº de jugadores ----------
-    // Los 4 botones llaman a esta funcion con su numero (1, 2, 3 o 4)
-
     public void ElegirJugadores(int numero)
     {
-        // Si cambia el numero, hay que volver a elegir los colores
         if (numero != GameSettings.HumanPlayers)
             personajeElegido = false;
 
@@ -124,8 +110,6 @@ public class MenuInicio : MonoBehaviour
         jugadoresElegidos = true;
         VolverAlPrincipal();
     }
-
-    // ---------- Pantalla de Color ----------
 
     private void EmpezarEleccionColores()
     {
@@ -141,8 +125,6 @@ public class MenuInicio : MonoBehaviour
         ActualizarTituloColor();
     }
 
-    // Los 4 botones de color llaman a esta funcion:
-    // 0 = Rojo, 1 = Amarillo, 2 = Azul, 3 = Verde
     public void ElegirColor(int color)
     {
         if (colorUsado[color])
@@ -152,12 +134,10 @@ public class MenuInicio : MonoBehaviour
             (GameSettings.PlayerColor)color;
         colorUsado[color] = true;
 
-        // El color elegido se queda gris y no se puede volver a elegir
         botonesColor[color].interactable = false;
 
         jugadorEligiendo++;
 
-        // Si ya han elegido todos los jugadores reales
         if (jugadorEligiendo >= GameSettings.HumanPlayers)
         {
             AsignarColoresIA();
@@ -170,7 +150,6 @@ public class MenuInicio : MonoBehaviour
         }
     }
 
-    // Las IAs se quedan con los colores que sobran
     private void AsignarColoresIA()
     {
         for (int i = GameSettings.HumanPlayers; i < GameSettings.MaxPlayers; i++)
@@ -193,18 +172,14 @@ public class MenuInicio : MonoBehaviour
                            ": elige tu color";
     }
 
-    // ---------- Actualizar la pantalla principal ----------
-
     private void ActualizarPrincipal()
     {
-        // Modo
         if (modoElegido)
             textoModo.text = "Modo de juego: " +
                              NombreModo(GameSettings.SelectedMode);
         else
             textoModo.text = "Modo de juego: —";
 
-        // Nº de jugadores
         if (jugadoresElegidos)
         {
             textoJugadores.text = "Nº de jugadores: " +
@@ -218,7 +193,6 @@ public class MenuInicio : MonoBehaviour
             textoJugadores.text = "Nº de jugadores: —";
         }
 
-        // Colores (solo los de los jugadores reales)
         if (personajeElegido)
         {
             string texto = "Colores:";
@@ -235,10 +209,8 @@ public class MenuInicio : MonoBehaviour
             textoPersonaje.text = "Color del personaje: —";
         }
 
-        // El color solo se puede elegir despues del Nº de jugadores
         botonPersonaje.interactable = jugadoresElegidos;
 
-        // START solo se activa con las 3 cosas elegidas (gris = desactivado)
         botonStart.interactable =
             modoElegido && jugadoresElegidos && personajeElegido;
     }
@@ -255,8 +227,6 @@ public class MenuInicio : MonoBehaviour
                 return "Clásico";
         }
     }
-
-    // ---------- Cambiar de pantalla ----------
 
     private void MostrarPanel(GameObject panel)
     {

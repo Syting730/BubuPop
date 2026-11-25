@@ -13,13 +13,10 @@ public class BombPlacer : MonoBehaviour
     private bool segundaBombaPendiente;
 
     [Header("Controles")]
-    // Jugador 1: Space, Jugador 2: Enter
     [SerializeField] private Key bombKey = Key.E;
-    // Mando
     [Tooltip("Mando de este jugador (0 = primer mando). -1 = sin mando")]
     [SerializeField] private int numeroMando = 0;
 
-    // IA = false para no colocar bombas con el teclado.
     public bool usarTeclado = true;
 
     private readonly List<GameObject> bombasActivas =
@@ -52,7 +49,6 @@ public class BombPlacer : MonoBehaviour
             return;
         }
 
-        // Quita de la lista las bombas que ya explotaron y se destruyeron.
         bombasActivas.RemoveAll(bomba => bomba == null);
 
         if (bombasActivas.Count >= CapacidadBombas)
@@ -83,7 +79,6 @@ public class BombPlacer : MonoBehaviour
             segundaBombaPendiente = false;
         }
 
-        // La bomba recuerda quien la puso (para los puntos del modo AD)
         Boom boom = bombaNueva.GetComponent<Boom>();
         if (boom != null)
             boom.SetDueno(gameObject);
@@ -105,7 +100,6 @@ public class BombPlacer : MonoBehaviour
 
         bombasActivas.RemoveAll(bomba => bomba == null);
 
-        // Busca empezando por la bomba activa más reciente.
         for (int i = bombasActivas.Count - 1; i >= 0; i--)
         {
             GameObject bomba = bombasActivas[i];
@@ -122,8 +116,6 @@ public class BombPlacer : MonoBehaviour
 
             Vector3Int diferencia = celdaBomba - celdaJugador;
 
-            // En la misma casilla no se puede determinar
-            // desde qué lado empujar.
             if (diferencia == Vector3Int.zero)
                 return false;
 

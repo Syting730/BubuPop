@@ -14,5 +14,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TableroAD.unity
     guid: bb3dea5ad051c3943a3982d26444d991
+  - enabled: 1
+    path: Assets/Scenes/TableroBoss.unity
+    guid: 5b79c4b57fc8a9946852ba817cf9504b
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

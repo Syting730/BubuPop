@@ -2,14 +2,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
-// Cronometro del modo Asalto al Diamante:
-// - cuenta atras desde la duracion elegida (por defecto 3:00)
-// - se muestra en pantalla como m:ss
-// - los ultimos segundos se pone en rojo y late para avisar
-// - al llegar a 0 avisa al PartidaManager para terminar la partida
-// Se para solo con la pausa y al acabar la partida
-// (porque el PartidaManager pone Time.timeScale a 0).
-
 public class Temporizador : MonoBehaviour
 {
     [Header("Duracion de la partida (segundos)")]
@@ -35,9 +27,6 @@ public class Temporizador : MonoBehaviour
     private bool terminado = false;
     private Vector3 escalaOriginal;
 
-    // ---------- Para otros scripts ----------
-
-    // Segundos que quedan
     public float TiempoRestante
     {
         get { return tiempoRestante; }
@@ -47,8 +36,6 @@ public class Temporizador : MonoBehaviour
     {
         get { return terminado; }
     }
-
-    // ---------- Inicio ----------
 
     private void Start()
     {
@@ -63,14 +50,11 @@ public class Temporizador : MonoBehaviour
         MostrarTiempo();
     }
 
-    // ---------- Cuenta atras ----------
-
     private void Update()
     {
         if (terminado)
             return;
 
-        // Time.deltaTime vale 0 en pausa: el reloj se para solo
         tiempoRestante -= Time.deltaTime;
 
         if (tiempoRestante <= 0f)
@@ -89,7 +73,6 @@ public class Temporizador : MonoBehaviour
         if (texto == null)
             return;
 
-        // Redondeo hacia arriba: se ve 0:01 hasta que de verdad acaba
         int segundos = Mathf.CeilToInt(tiempoRestante);
         int minutos = segundos / 60;
         segundos = segundos % 60;
@@ -99,7 +82,6 @@ public class Temporizador : MonoBehaviour
         bool aviso = tiempoRestante <= segundosAviso && tiempoRestante > 0f;
         texto.color = aviso ? colorAviso : colorNormal;
 
-        // Latido en los ultimos segundos
         if (aviso)
         {
             float latido = 1f + 0.15f * Mathf.Abs(Mathf.Sin(tiempoRestante * Mathf.PI));
@@ -111,15 +93,12 @@ public class Temporizador : MonoBehaviour
         }
     }
 
-    // ---------- Fin ----------
-
     private void TiempoAgotado()
     {
         terminado = true;
 
         Debug.Log("¡Se acabo el tiempo!");
 
-        // Primero los demas scripts (puntos...), despues el fin de partida
         alAcabarElTiempo.Invoke();
 
         if (partidaManager != null)

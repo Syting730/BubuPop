@@ -1,8 +1,5 @@
 using UnityEngine;
 
-// Cristal pequeño del modo Asalto al Diamante:
-// el primer jugador que pasa por encima gana 2 puntos al instante
-// y el cristal desaparece. Lo crea el GeneradorCristales.
 public class Cristal : MonoBehaviour
 {
     private GeneradorCristales generador;

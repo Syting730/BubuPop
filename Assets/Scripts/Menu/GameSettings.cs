@@ -1,7 +1,5 @@
 using UnityEngine;
 
-// Guarda lo que se elige en el menu.
-// Static: no va en ningun objeto y se conserva al cambiar de escena.
 public static class GameSettings
 {
     public enum GameMode
@@ -19,16 +17,12 @@ public static class GameSettings
         Verde
     }
 
-    // Cada partida tiene siempre 4 jugadores
     public const int MaxPlayers = 4;
 
     public static GameMode SelectedMode = GameMode.Clasico;
 
-    // true cuando se ha pulsado START en el menu
-    // (si se abre el Tablero directamente, es false)
     public static bool SettingsChosen = false;
 
-    // Jugadores reales (1-4). El resto son IAs.
     public static int HumanPlayers = 1;
 
     public static int AIPlayers
@@ -36,11 +30,8 @@ public static class GameSettings
         get { return MaxPlayers - HumanPlayers; }
     }
 
-    // Color de cada jugador: [0] = J1, [1] = J2...
-    // Primero los jugadores reales y despues las IAs
     public static PlayerColor[] PlayerColors = new PlayerColor[MaxPlayers];
 
-    // Pasar de nuestro color al color de Unity (para pintar los cuadros)
     public static Color ToUnityColor(PlayerColor color)
     {
         switch (color)
@@ -48,7 +39,7 @@ public static class GameSettings
             case PlayerColor.Rojo: return new Color(1f, 0.2f, 0.2f);
             case PlayerColor.Amarillo: return new Color(1f, 0.85f, 0f);
             case PlayerColor.Azul: return new Color(0.2f, 0.4f, 1f);
-            default: return new Color(0.2f, 0.8f, 0.2f); // Verde
+            default: return new Color(0.2f, 0.8f, 0.2f);
         }
     }
 }

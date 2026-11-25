@@ -49,7 +49,6 @@ public class PowerUpSpawner : MonoBehaviour
 
     private IEnumerator CicloAparicion()
     {
-        // Deja que el generador de obstáculos termine primero.
         yield return null;
 
         while (true)

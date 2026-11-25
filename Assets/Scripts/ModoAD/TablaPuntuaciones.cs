@@ -2,13 +2,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-// Tabla de puntuaciones del modo Asalto al Diamante:
-// - cada jugador ve sus puntos y su puesto en su zona de la pantalla
-//   (debajo o encima de sus corazones)
-// - los puestos se calculan ordenando de mas a menos puntos;
-//   si dos jugadores tienen los mismos puntos, comparten puesto
-// - se actualiza sola cada vez que alguien gana puntos (PuntosAD)
-// - opcional: la tabla completa ordenada en la pantalla de fin
 public class TablaPuntuaciones : MonoBehaviour
 {
     [Header("Texto de cada jugador (en orden: J1, J2, J3, J4)")]
@@ -21,27 +14,33 @@ public class TablaPuntuaciones : MonoBehaviour
     [Tooltip("Si se deja vacio, se busca solo en la escena")]
     [SerializeField] private PuntosAD puntos;
 
+    [Tooltip("Modo Boss: si se deja vacio, se busca solo en la escena")]
+    [SerializeField] private PuntosBoss puntosBoss;
+
     [Tooltip("Si se deja vacio, se busca solo en la escena")]
     [SerializeField] private PartidaManager partidaManager;
-
-    // ---------- Inicio ----------
 
     private void Start()
     {
         if (puntos == null)
             puntos = FindAnyObjectByType<PuntosAD>();
 
+        if (puntos == null && puntosBoss == null)
+            puntosBoss = FindAnyObjectByType<PuntosBoss>();
+
         if (partidaManager == null)
             partidaManager = FindAnyObjectByType<PartidaManager>();
 
-        if (puntos == null)
+        if (puntos == null && puntosBoss == null)
         {
-            Debug.LogWarning("TablaPuntuaciones: no hay PuntosAD en la escena");
+            Debug.LogWarning("TablaPuntuaciones: no hay PuntosAD ni PuntosBoss en la escena");
             return;
         }
 
-        // Cada vez que cambian los puntos, se repinta la tabla
-        puntos.alCambiarPuntos.AddListener(AlCambiarPuntos);
+        if (puntos != null)
+            puntos.alCambiarPuntos.AddListener(AlCambiarPuntos);
+        else
+            puntosBoss.alCambiarPuntos.AddListener(AlCambiarPuntos);
 
         Actualizar();
     }
@@ -50,6 +49,9 @@ public class TablaPuntuaciones : MonoBehaviour
     {
         if (puntos != null)
             puntos.alCambiarPuntos.RemoveListener(AlCambiarPuntos);
+
+        if (puntosBoss != null)
+            puntosBoss.alCambiarPuntos.RemoveListener(AlCambiarPuntos);
     }
 
     private void AlCambiarPuntos(int jugador, int total)
@@ -57,21 +59,19 @@ public class TablaPuntuaciones : MonoBehaviour
         Actualizar();
     }
 
-    // ---------- Pintar la tabla ----------
-
     public void Actualizar()
     {
-        if (puntos == null)
+        if (puntos == null && puntosBoss == null)
             return;
 
         int[] lista = new int[GameSettings.MaxPlayers];
         for (int i = 0; i < lista.Length; i++)
-            lista[i] = puntos.GetPuntos(i);
+            lista[i] = puntos != null ? puntos.GetPuntos(i)
+                                      : puntosBoss.GetPuntos(i);
 
         List<int> orden = Ordenar(lista);
         int[] puestos = Puestos(lista, orden);
 
-        // Zona de cada jugador: nombre, puntos y puesto
         for (int k = 0; k < orden.Count; k++)
         {
             int j = orden[k];
@@ -85,7 +85,6 @@ public class TablaPuntuaciones : MonoBehaviour
                 puestos[k] + "º puesto";
         }
 
-        // Tabla completa (pantalla de fin)
         if (textoFinal != null)
             textoFinal.text = CrearTexto(lista);
     }
@@ -108,7 +107,6 @@ public class TablaPuntuaciones : MonoBehaviour
         return tabla;
     }
 
-    // "Jugador 1 (Rojo)" pintado de su color
     private string Nombre(int j)
     {
         string nombre = partidaManager != null
@@ -123,10 +121,6 @@ public class TablaPuntuaciones : MonoBehaviour
                nombre + "</color>";
     }
 
-    // ---------- Logica (sin Unity: se puede probar con tests) ----------
-
-    // Devuelve los jugadores (0 = J1 ... 3 = J4) de mas a menos puntos.
-    // Con empate, va primero el de numero mas bajo.
     public static List<int> Ordenar(int[] lista)
     {
         List<int> orden = new List<int>();
@@ -143,7 +137,6 @@ public class TablaPuntuaciones : MonoBehaviour
         return orden;
     }
 
-    // Puesto de cada fila (1, 2, 2, 4...): con empate se comparte puesto
     public static int[] Puestos(int[] lista, List<int> orden)
     {
         int[] puestos = new int[orden.Count];

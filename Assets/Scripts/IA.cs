@@ -3,23 +3,6 @@ using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 using System.Collections.Generic;
 
-// IA de BubuPop. Se mueve de casilla en casilla y, al llegar al centro
-// de cada una, decide qué hacer (por orden de prioridad):
-//   1. Huir si está dentro del alcance de una burbuja
-//   2. Atacar: si hay un enemigo en su cruz de explosión, pone burbuja
-//   3. Si lleva el diamante -> volver a su base
-//   4. Si otro lleva el diamante -> cazarle: emboscada en su base
-//      (si llega antes que él) o perseguirle, atacando más a menudo
-//   4b. Si no, ir a por un power-up o un cristal cercano
-//   5. Ir a por su objetivo:
-//        - Modo Clásico: ponerse a tiro del enemigo más cercano
-//          (prefiere a los jugadores humanos)
-//        - Modo Diamante: el diamante, o ponerse a tiro de quien lo lleve
-//      Si hay obstáculos en medio, los rompe con burbujas
-//   6. Si no tiene nada que hacer, pasea sin dar media vuelta
-// Los demás jugadores cuentan como casillas ocupadas: no intenta
-// atravesarlos (así no se quedan empujándose).
-// Se activa sola en los jugadores que no son personas (GameSettings.HumanPlayers).
 public class IA : MonoBehaviour
 {
     [Tooltip("1 = J1, 2 = J2, 3 = J3, 4 = J4")]
@@ -55,39 +38,35 @@ public class IA : MonoBehaviour
     private Grid grid;
     private Tilemap muros;
     private Tilemap obstaculos;
-    private PlayerMovement movimiento; // de aqui saca la velocidad (el Diamante la cambia)
-    private BombPlacer bombPlacer;     // pone las burbujas (el Diamante lo desactiva)
-    private Diamante diamante;         // null en el modo Clásico
+    private PlayerMovement movimiento;
+    private BombPlacer bombPlacer;
+    private Diamante diamante;
 
-    private Vector3Int casillaDestino;  // casilla a la que va
-    private Vector3Int direccion;       // dirección actual
+    private Vector3Int casillaDestino;
+    private Vector3Int direccion;
     private float tiempoUltimaBurbuja = -999f;
     private float tiempoAtascado;
     private float tiempoEsperando;
 
-    // Casilla en la que se atascó: la evita durante un rato
     private Vector3Int casillaBloqueada;
     private float finBloqueo;
 
-    // Las otras IA miran esto para no elegir la misma casilla (reserva)
     public Vector3Int CasillaDestino
     {
         get { return casillaDestino; }
     }
 
-    // Datos que se recalculan en cada decisión
-    private HashSet<Vector3Int> peligro = new HashSet<Vector3Int>();          // casillas que van a explotar
-    private HashSet<Vector3Int> casillasBurbujas = new HashSet<Vector3Int>(); // casillas con burbuja
-    private HashSet<Vector3Int> ocupadas = new HashSet<Vector3Int>();         // casillas con otro jugador
-    private Dictionary<Vector3Int, int> distancia = new Dictionary<Vector3Int, int>();               // pasos hasta cada casilla
-    private Dictionary<Vector3Int, Vector3Int> primerPaso = new Dictionary<Vector3Int, Vector3Int>(); // por dónde salir para llegar
+    private HashSet<Vector3Int> peligro = new HashSet<Vector3Int>();
+    private HashSet<Vector3Int> casillasBurbujas = new HashSet<Vector3Int>();
+    private HashSet<Vector3Int> ocupadas = new HashSet<Vector3Int>();
+    private Dictionary<Vector3Int, int> distancia = new Dictionary<Vector3Int, int>();
+    private Dictionary<Vector3Int, Vector3Int> primerPaso = new Dictionary<Vector3Int, Vector3Int>();
 
     private Vector3Int[] direcciones =
         { Vector3Int.up, Vector3Int.down, Vector3Int.left, Vector3Int.right };
 
     void Start()
     {
-        // Si este jugador lo maneja una persona, la IA no hace nada
         if (numeroJugador <= GameSettings.HumanPlayers)
         {
             enabled = false;
@@ -98,7 +77,6 @@ public class IA : MonoBehaviour
         grid = FindAnyObjectByType<Grid>();
         diamante = FindAnyObjectByType<Diamante>();
 
-        // Los mismos tilemaps que usa Boom
         GameObject objMuros = GameObject.Find("MurosFijos");
         GameObject objObstaculos = GameObject.Find("ObstaculosDestructibles");
 
@@ -112,7 +90,6 @@ public class IA : MonoBehaviour
         muros = objMuros.GetComponent<Tilemap>();
         obstaculos = objObstaculos.GetComponent<Tilemap>();
 
-        // La IA no usa el teclado ni el mando
         movimiento = GetComponent<PlayerMovement>();
         movimiento.enabled = false;
 
@@ -128,14 +105,12 @@ public class IA : MonoBehaviour
         if (guante != null)
             guante.usarTeclado = false;
 
-        // Empezar centrado en su casilla
         casillaDestino = grid.WorldToCell(rb.position);
         rb.position = Centro(casillaDestino);
     }
 
     void FixedUpdate()
     {
-        // Moverse hacia el centro de la casilla destino
         Vector2 destino = Centro(casillaDestino);
         Vector2 nuevaPos = Vector2.MoveTowards(rb.position, destino,
                                        movimiento.speed * factorVelocidad * Time.fixedDeltaTime);
@@ -144,15 +119,11 @@ public class IA : MonoBehaviour
 
         if (Vector2.Distance(nuevaPos, destino) < 0.01f)
         {
-            // Ha llegado: decide la siguiente casilla
             tiempoAtascado = 0f;
             Decidir();
         }
         else
         {
-            // Si tarda demasiado es que algo le bloquea (otro jugador):
-            // apunta esa casilla para evitarla 1,5 s, vuelve al centro
-            // de la casilla en la que está y decide otra vez
             tiempoAtascado += Time.fixedDeltaTime;
             if (tiempoAtascado > 0.8f)
             {
@@ -164,14 +135,11 @@ public class IA : MonoBehaviour
         }
     }
 
-    // ------------------ Decisión ------------------
-
     void Decidir()
     {
         Vector3Int casilla = casillaDestino;
         ActualizarMapa();
 
-        // 1. Huir
         if (peligro.Contains(casilla))
         {
             estado = "Huyendo";
@@ -179,19 +147,16 @@ public class IA : MonoBehaviour
             return;
         }
 
-        // Calcula a qué casillas puede llegar sin pasar por peligro
         Explorar(casilla, true);
 
         bool hayPortadorEnemigo = diamante != null && diamante.Portador != null &&
                                   diamante.Portador != gameObject;
 
-        // Cuando otro lleva el diamante, ataca más a menudo
         float espera = hayPortadorEnemigo ? tiempoEntreBurbujasCaza : tiempoEntreBurbujas;
 
         bool puedePoner = bombPlacer != null && bombPlacer.enabled &&
                           Time.time - tiempoUltimaBurbuja > espera;
 
-        // 2. Atacar: hay un enemigo dentro de la cruz de explosión
         if (puedePoner && HayEnemigoEnCruz(casilla) && TieneEscapatoria(casilla))
         {
             estado = "Atacando";
@@ -201,38 +166,31 @@ public class IA : MonoBehaviour
 
         if (diamante != null && diamante.Portador == gameObject)
         {
-            // 3. Llevo el diamante: a mi base
             estado = "Llevando el diamante a la base";
             if (IrAlMasCercano(CasillasMiBase(), 100))
                 return;
         }
         else if (hayPortadorEnemigo)
         {
-            // 4. Otro lleva el diamante: cazarle (sin distraerse con power-ups)
             if (CazarPortador(casilla, puedePoner))
                 return;
         }
         else
         {
-            // 4. Power-up o cristal cercano
             estado = "Yendo a por un power-up o cristal";
             if (IrAlMasCercano(CasillasRecogibles(), distanciaPowerUp))
                 return;
 
-            // 5. Objetivo
             Vector3Int meta;
             bool metaEsJugador;
             if (BuscarObjetivo(out meta, out metaEsJugador))
             {
-                // A un jugador no hace falta tocarlo: basta con ponerse
-                // en una casilla donde la explosión le alcance
                 List<Vector3Int> destinos = metaEsJugador
                     ? CasillasDeAtaque(meta)
                     : new List<Vector3Int> { meta };
 
                 if (metaEsJugador && destinos.Contains(casilla))
                 {
-                    // Ya está a tiro pero aún no puede poner: espera un poco
                     estado = "Esperando para atacar";
                     if (Esperar()) return;
                 }
@@ -242,7 +200,6 @@ public class IA : MonoBehaviour
                     if (IrAlMasCercano(destinos, 100))
                         return;
 
-                    // No se puede llegar: romper obstáculos en dirección a la meta
                     Vector3Int sitio;
                     if (BuscarSitioParaRomper(meta, out sitio))
                     {
@@ -267,22 +224,16 @@ public class IA : MonoBehaviour
             }
         }
 
-        // 6. Pasear
         estado = "Paseando";
         Pasear(casilla);
     }
 
-    // Devuelve true mientras deba seguir esperando (máximo 'maximo' segundos)
     bool Esperar(float maximo = 2f)
     {
         tiempoEsperando += Time.fixedDeltaTime;
         return tiempoEsperando < maximo;
     }
 
-    // ------------------ Cazar al portador del diamante ------------------
-
-    // Camino más corto del portador hasta su base (búsqueda en anchura).
-    // Devuelve las casillas por las que pasará, en orden, sin contar la base.
     List<Vector3Int> CaminoDelPortador(Vector3Int desde, List<Vector3Int> baseRival)
     {
         List<Vector3Int> camino = new List<Vector3Int>();
@@ -290,7 +241,6 @@ public class IA : MonoBehaviour
         if (metas.Count == 0 || metas.Contains(desde))
             return camino;
 
-        // Para cada casilla: de qué casilla venía
         Dictionary<Vector3Int, Vector3Int> padre = new Dictionary<Vector3Int, Vector3Int>();
         Queue<Vector3Int> cola = new Queue<Vector3Int>();
         cola.Enqueue(desde);
@@ -324,7 +274,6 @@ public class IA : MonoBehaviour
         if (!encontrado)
             return camino;
 
-        // Volver hacia atrás desde la base hasta el portador
         Vector3Int c = padre[llegada];
         while (c != desde)
         {
@@ -334,12 +283,6 @@ public class IA : MonoBehaviour
         return camino;
     }
 
-    // 1. Calcula por dónde va a ir el portador hasta su base.
-    // 2. Trampa: si ese camino pasa por mi cruz justo cuando la burbuja
-    //    va a explotar, la pone ya (sin esperar a tenerle a tiro).
-    // 3. Emboscada: si puede llegar antes que él a algún punto de su camino,
-    //    se coloca ahí y le espera.
-    // 4. Si no, le persigue para ponerse a tiro.
     bool CazarPortador(Vector3Int casilla, bool puedePoner)
     {
         GameObject portador = diamante.Portador;
@@ -347,17 +290,14 @@ public class IA : MonoBehaviour
         List<Vector3Int> baseRival = CasillasBaseDe(diamante.IndicePortador);
         List<Vector3Int> camino = CaminoDelPortador(casillaPortador, baseRival);
 
-        // Velocidades en casillas por segundo (el portador va ralentizado por el Diamante)
         float miVelocidad = movimiento.speed * factorVelocidad;
         float suVelocidad = portador.GetComponent<PlayerMovement>().speed;
         IA iaPortador = portador.GetComponent<IA>();
         if (iaPortador != null && iaPortador.enabled)
             suVelocidad *= iaPortador.factorVelocidad;
 
-        // Casillas que avanza el portador mientras la burbuja explota
         float pasosHastaExplosion = suVelocidad * tiempoExplosion;
 
-        // --- Trampa ---
         if (puedePoner && camino.Count > 0)
         {
             HashSet<Vector3Int> miCruz = new HashSet<Vector3Int>();
@@ -365,7 +305,7 @@ public class IA : MonoBehaviour
 
             for (int i = 0; i < camino.Count; i++)
             {
-                int pasos = i + 1; // pasos que le faltan al portador para llegar a camino[i]
+                int pasos = i + 1;
                 bool llegaAlExplotar = Mathf.Abs(pasos - pasosHastaExplosion) <= 1.5f;
 
                 if (llegaAlExplotar && miCruz.Contains(camino[i]) && TieneEscapatoria(casilla))
@@ -377,9 +317,6 @@ public class IA : MonoBehaviour
             }
         }
 
-        // --- Emboscada ---
-        // Casillas (fuera de su base) desde las que alcanzo su camino
-        // y a las que llego antes que él
         HashSet<Vector3Int> emboscada = new HashSet<Vector3Int>();
         for (int i = 0; i < camino.Count; i++)
         {
@@ -411,17 +348,15 @@ public class IA : MonoBehaviour
                 return true;
         }
 
-        // --- Persecución ---
         estado = "Persiguiendo al portador";
         List<Vector3Int> destinos = CasillasDeAtaque(casillaPortador);
 
         if (destinos.Contains(casilla))
-            return Esperar(2f); // a tiro: el paso 2 (Atacar) pondrá la burbuja
+            return Esperar(2f);
 
         if (IrAlMasCercano(destinos, 100))
             return true;
 
-        // No se puede llegar: romper obstáculos hacia el portador
         Vector3Int sitio;
         if (BuscarSitioParaRomper(casillaPortador, out sitio))
         {
@@ -462,14 +397,8 @@ public class IA : MonoBehaviour
     {
         bombPlacer.PlaceBomb();
         tiempoUltimaBurbuja = Time.time;
-        // En la siguiente decisión verá el peligro y huirá
     }
 
-    // ------------------ Búsqueda de caminos (BFS) ------------------
-
-    // Búsqueda en anchura: recorre las casillas por orden de distancia
-    // (primero las de 1 paso, luego las de 2...) y apunta para cada una
-    // cuántos pasos hay y por qué dirección hay que salir para llegar.
     void Explorar(Vector3Int inicio, bool evitarPeligro)
     {
         distancia.Clear();
@@ -487,8 +416,8 @@ public class IA : MonoBehaviour
             {
                 Vector3Int vecina = actual + d;
 
-                if (distancia.ContainsKey(vecina)) continue;          // ya visitada
-                if (!Libre(vecina)) continue;                         // muro, obstáculo, burbuja o jugador
+                if (distancia.ContainsKey(vecina)) continue;
+                if (!Libre(vecina)) continue;
                 if (evitarPeligro && peligro.Contains(vecina)) continue;
 
                 distancia[vecina] = distancia[actual] + 1;
@@ -498,7 +427,6 @@ public class IA : MonoBehaviour
         }
     }
 
-    // Va hacia la casilla más cercana de la lista (si se puede llegar)
     bool IrAlMasCercano(List<Vector3Int> objetivos, int distanciaMax)
     {
         Vector3Int mejor = Vector3Int.zero;
@@ -522,14 +450,10 @@ public class IA : MonoBehaviour
         return true;
     }
 
-    // ------------------ Huida ------------------
-
     void Huir(Vector3Int casilla)
     {
-        // Para salir puede cruzar casillas peligrosas
         Explorar(casilla, false);
 
-        // Busca la casilla segura más cercana
         Vector3Int mejor = Vector3Int.zero;
         int mejorDistancia = int.MaxValue;
 
@@ -546,7 +470,6 @@ public class IA : MonoBehaviour
             Mover(casilla, primerPaso[mejor]);
     }
 
-    // Simula una burbuja en mi casilla: ¿llego a tiempo a una casilla segura?
     bool TieneEscapatoria(Vector3Int casilla)
     {
         HashSet<Vector3Int> simulado = new HashSet<Vector3Int>(peligro);
@@ -561,14 +484,11 @@ public class IA : MonoBehaviour
         return false;
     }
 
-    // ------------------ Objetivos ------------------
-
     bool BuscarObjetivo(out Vector3Int meta, out bool metaEsJugador)
     {
         meta = Vector3Int.zero;
         metaEsJugador = false;
 
-        // Modo Diamante: el diamante si está libre, o cazar a quien lo lleve
         if (diamante != null)
         {
             if (diamante.Portador == null)
@@ -583,13 +503,11 @@ public class IA : MonoBehaviour
             return true;
         }
 
-        // Modo Clásico: el enemigo más cercano, prefiriendo a los humanos
         int mejorPuntuacion = int.MaxValue;
         foreach (PlayerMovement enemigo in Enemigos())
         {
             Vector3Int c = grid.WorldToCell(enemigo.transform.position);
 
-            // Distancia hasta ponerse a tiro (o en línea recta si no se puede llegar)
             int d = 1000 + Manhattan(casillaDestino, c);
             foreach (Vector3Int ataque in CasillasDeAtaque(c))
             {
@@ -611,8 +529,6 @@ public class IA : MonoBehaviour
         return metaEsJugador;
     }
 
-    // Casillas desde las que una burbuja alcanzaría a la casilla 'objetivo'
-    // (las de su cruz, sin contar la suya)
     List<Vector3Int> CasillasDeAtaque(Vector3Int objetivo)
     {
         HashSet<Vector3Int> cruz = new HashSet<Vector3Int>();
@@ -621,8 +537,6 @@ public class IA : MonoBehaviour
         return new List<Vector3Int>(cruz);
     }
 
-    // Si no puede llegar a la meta, busca una casilla a la que sí puede llegar,
-    // pegada a un obstáculo, que esté lo más cerca posible de la meta
     bool BuscarSitioParaRomper(Vector3Int meta, out Vector3Int sitio)
     {
         sitio = Vector3Int.zero;
@@ -635,7 +549,6 @@ public class IA : MonoBehaviour
                 Vector3Int obstaculo = par.Key + d;
                 if (!obstaculos.HasTile(obstaculo)) continue;
 
-                // Cuanto más cerca de la meta esté el obstáculo y menos haya que andar, mejor
                 int puntuacion = Manhattan(obstaculo, meta) * 2 + par.Value;
                 if (puntuacion < mejorPuntuacion)
                 {
@@ -649,7 +562,6 @@ public class IA : MonoBehaviour
 
     void Pasear(Vector3Int casilla)
     {
-        // Direcciones posibles sin dar media vuelta
         List<Vector3Int> posibles = new List<Vector3Int>();
         foreach (Vector3Int d in direcciones)
         {
@@ -658,7 +570,6 @@ public class IA : MonoBehaviour
                 posibles.Add(d);
         }
 
-        // Callejón sin salida: entonces sí da media vuelta
         if (posibles.Count == 0 && direccion != Vector3Int.zero &&
             Libre(casilla - direccion) && !peligro.Contains(casilla - direccion))
             posibles.Add(-direccion);
@@ -666,16 +577,12 @@ public class IA : MonoBehaviour
         if (posibles.Count == 0)
             return;
 
-        // Prefiere seguir recto
         if (posibles.Contains(direccion) && Random.value < 0.7f)
             Mover(casilla, direccion);
         else
             Mover(casilla, posibles[Random.Range(0, posibles.Count)]);
     }
 
-    // ------------------ Jugadores ------------------
-
-    // Los demás jugadores que siguen vivos
     List<PlayerMovement> Enemigos()
     {
         List<PlayerMovement> lista = new List<PlayerMovement>();
@@ -692,7 +599,6 @@ public class IA : MonoBehaviour
         return lista;
     }
 
-    // Un jugador es humano si no tiene IA o si su IA está apagada
     bool EsHumano(PlayerMovement jugador)
     {
         IA otraIA = jugador.GetComponent<IA>();
@@ -712,9 +618,6 @@ public class IA : MonoBehaviour
         return false;
     }
 
-    // ------------------ Listas de casillas ------------------
-
-    // Power-ups y cristales (todo lo que se recoge al pasar por encima)
     List<Vector3Int> CasillasRecogibles()
     {
         List<Vector3Int> lista = new List<Vector3Int>();
@@ -733,7 +636,6 @@ public class IA : MonoBehaviour
         return CasillasBaseDe(numeroJugador - 1);
     }
 
-    // Todas las casillas que ocupa la base del jugador 'indice' (0 = J1)
     List<Vector3Int> CasillasBaseDe(int indice)
     {
         List<Vector3Int> lista = new List<Vector3Int>();
@@ -765,8 +667,6 @@ public class IA : MonoBehaviour
         return lista;
     }
 
-    // ------------------ Mapa: peligro, burbujas y jugadores ------------------
-
     void ActualizarMapa()
     {
         peligro.Clear();
@@ -783,20 +683,16 @@ public class IA : MonoBehaviour
         foreach (PlayerMovement p in Enemigos())
             ocupadas.Add(grid.WorldToCell(p.transform.position));
 
-        // Casillas reservadas por las otras IA (a las que van ahora mismo)
         foreach (IA otra in FindObjectsByType<IA>())
         {
             if (otra != this && otra.enabled)
                 ocupadas.Add(otra.CasillaDestino);
         }
 
-        // Casilla donde se atascó hace poco
         if (Time.time < finBloqueo)
             ocupadas.Add(casillaBloqueada);
     }
 
-    // Misma cruz que calcula Boom: los muros fijos cortan la explosión
-    // y los obstáculos se rompen pero la explosión no pasa detrás
     void AñadirCruz(Vector3Int origen, HashSet<Vector3Int> casillas)
     {
         casillas.Add(origen);
@@ -812,8 +708,6 @@ public class IA : MonoBehaviour
             }
         }
     }
-
-    // ------------------ Utilidades ------------------
 
     bool Libre(Vector3Int casilla)
     {

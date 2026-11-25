@@ -3,18 +3,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 
-// Diamante del modo Asalto al Diamante:
-// - se coloca en la casilla central del tablero al empezar
-// - un jugador lo coge al pasar por encima y el diamante le sigue
-// - si el portador llega a SU base, el diamante vuelve al centro
-// - el portador va mas lento y no puede poner bombas
-// - si al portador le quitan una vida (o muere), el diamante cae
-//   al suelo en esa casilla y cualquiera lo puede coger
-// - el portador puede soltarlo cuando quiera:
-//   J1 = Q, J2 = Ctrl derecho, mando = R / RB / R1
-// - al llegar a su base, el portador gana puntos (PuntosAD)
-//   y el diamante desaparece: reaparece en el centro a los 10 s
-
 public class Diamante : MonoBehaviour
 {
     [Header("Tilemap del suelo (para calcular el centro)")]
@@ -50,38 +38,28 @@ public class Diamante : MonoBehaviour
     private Base[] bases;
     private PuntosAD puntos;
 
-    // Para quitar los efectos al soltar el diamante
     private PlayerMovement movimientoPortador;
     private BombPlacer bombasPortador;
     private PlayerDamage vidaPortador;
     private float velocidadOriginal;
     private int vidasAlCoger;
 
-    // Quien lo acaba de soltar a mano no lo vuelve a coger
-    // hasta que se aparte de la casilla
     private GameObject ignorarHastaQueSalga;
 
-    // ---------- Para otros scripts ----------
-
-    // Posicion de la casilla central
     public Vector3 PosicionCentro
     {
         get { return posicionCentro; }
     }
 
-    // Jugador que lleva el diamante (null si nadie)
     public GameObject Portador
     {
         get { return portador; }
     }
 
-    // Numero del portador (0 = J1 ... 3 = J4), -1 si nadie
     public int IndicePortador
     {
         get { return indicePortador; }
     }
-
-    // ---------- Colocar en el centro ----------
 
     private void Start()
     {
@@ -105,11 +83,6 @@ public class Diamante : MonoBehaviour
         Debug.Log("Diamante colocado en la casilla central " + centro);
     }
 
-    // ---------- Coger ----------
-
-    // Un jugador pasa por encima del diamante.
-    // Se usa Stay (y no Enter) para que, si el diamante cae
-    // encima de alguien, ese jugador tambien lo pueda coger.
     private void OnTriggerStay2D(Collider2D otro)
     {
         if (portador != null)
@@ -125,7 +98,6 @@ public class Diamante : MonoBehaviour
         Coger(jugador);
     }
 
-    // El que lo solto se aparta: ya lo puede volver a coger
     private void OnTriggerExit2D(Collider2D otro)
     {
         PlayerMovement jugador = otro.GetComponentInParent<PlayerMovement>();
@@ -139,17 +111,14 @@ public class Diamante : MonoBehaviour
         portador = jugador.gameObject;
         indicePortador = System.Array.IndexOf(jugadores, portador);
 
-        // Ralentizar
         movimientoPortador = jugador;
         velocidadOriginal = jugador.speed;
         jugador.speed = velocidadOriginal * factorVelocidad;
 
-        // Bloquear bombas (desactivando su BombPlacer)
         bombasPortador = portador.GetComponentInChildren<BombPlacer>();
         if (bombasPortador != null)
             bombasPortador.enabled = false;
 
-        // Guardar vidas para saber si le dan mientras lo lleva
         vidaPortador = portador.GetComponentInChildren<PlayerDamage>();
         if (vidaPortador != null)
             vidasAlCoger = vidaPortador.GetCurrentLives();
@@ -157,16 +126,11 @@ public class Diamante : MonoBehaviour
         Debug.Log("Jugador " + (indicePortador + 1) + " ha cogido el diamante");
     }
 
-    // ---------- Llevar y llegar a la base ----------
-
     private void Update()
     {
         if (portador == null)
             return;
 
-        // ¿Le han quitado una vida o ha muerto?
-        // (se comprueba antes de mover el diamante: asi aun esta
-        //  en la casilla donde le dieron, no en su punto de inicio)
         if (PortadorHaSidoAlcanzado())
         {
             Debug.Log("Jugador " + (indicePortador + 1) +
@@ -175,7 +139,6 @@ public class Diamante : MonoBehaviour
             return;
         }
 
-        // ¿Quiere soltarlo?
         if (SoltarPulsado())
         {
             Debug.Log("Jugador " + (indicePortador + 1) + " suelta el diamante");
@@ -185,10 +148,8 @@ public class Diamante : MonoBehaviour
             return;
         }
 
-        // El diamante sigue al portador
         transform.position = portador.transform.position + desplazamiento;
 
-        // ¿Ha llegado el portador a SU base?
         foreach (Base b in bases)
         {
             if (b.Jugador != indicePortador)
@@ -222,18 +183,14 @@ public class Diamante : MonoBehaviour
                vidaPortador.GetCurrentLives() < vidasAlCoger;
     }
 
-    // ---------- Soltar ----------
-
-    // Tecla del portador o boton R / RB / R1 de su mando
     private bool SoltarPulsado()
     {
-        if (Time.timeScale == 0f)  // en pausa o partida terminada
+        if (Time.timeScale == 0f)
             return false;
 
         if (indicePortador < 0)
             return false;
 
-        // Teclado
         if (Keyboard.current != null &&
             indicePortador < teclaSoltar.Length &&
             teclaSoltar[indicePortador] != Key.None &&
@@ -242,14 +199,12 @@ public class Diamante : MonoBehaviour
             return true;
         }
 
-        // Mando
         Gamepad mando = MandoDelPortador();
         return mando != null && mando.rightShoulder.wasPressedThisFrame;
     }
 
     private Gamepad MandoDelPortador()
     {
-        // Si el jugador usa PlayerInput con un mando, ese es el suyo
         PlayerInput input = portador.GetComponent<PlayerInput>();
         if (input != null && input.enabled)
         {
@@ -260,7 +215,6 @@ public class Diamante : MonoBehaviour
             }
         }
 
-        // Si no, el numero de mando puesto en el Inspector
         if (indicePortador >= mandoDeJugador.Length)
             return null;
 
@@ -271,9 +225,6 @@ public class Diamante : MonoBehaviour
         return Gamepad.all[numero];
     }
 
-    // ---------- Reaparecer ----------
-
-    // true mientras el diamante esta esperando para reaparecer
     public bool Esperando
     {
         get { return esperando; }
@@ -281,9 +232,6 @@ public class Diamante : MonoBehaviour
 
     private bool esperando = false;
 
-    // Oculta el diamante y lo vuelve a poner en el centro
-    // pasados tiempoReaparicion segundos.
-    // WaitForSeconds usa el tiempo del juego: en pausa no cuenta.
     private IEnumerator Reaparecer()
     {
         esperando = true;
@@ -300,8 +248,6 @@ public class Diamante : MonoBehaviour
         Debug.Log("El diamante ha vuelto al centro");
     }
 
-    // Esconde o enseña el dibujo y el collider
-    // (sin collider nadie lo puede coger mientras no se ve)
     private void Mostrar(bool visible)
     {
         foreach (Renderer r in GetComponentsInChildren<Renderer>())
@@ -311,14 +257,12 @@ public class Diamante : MonoBehaviour
             c.enabled = visible;
     }
 
-    // Suelta el diamante y lo devuelve al centro
     public void Soltar()
     {
         QuitarEfectos();
         transform.position = posicionCentro;
     }
 
-    // Suelta el diamante en la casilla donde esta ahora
     public void SoltarEnSuelo()
     {
         QuitarEfectos();
@@ -327,7 +271,6 @@ public class Diamante : MonoBehaviour
         transform.position = suelo.GetCellCenterWorld(casilla);
     }
 
-    // Devuelve la velocidad y las bombas al portador
     private void QuitarEfectos()
     {
         if (movimientoPortador != null)
