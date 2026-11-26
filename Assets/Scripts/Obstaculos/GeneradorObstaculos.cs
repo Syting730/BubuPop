@@ -53,6 +53,9 @@ public class GeneradorObstaculos : MonoBehaviour
              "obstaculos. Todos tienen que romperlo para llegar")]
     [SerializeField] private bool rodearDiamante = true;
 
+    [Tooltip("Modo Boss: casillas libres alrededor del Boss")]
+    [SerializeField, Min(0)] private int margenBoss = 1;
+
     [Tooltip("Modo AD: cada jugador tiene un camino sin obstaculos desde " +
              "su salida hasta el anillo, igual de largo para todos. " +
              "Asi lo unico que hay que romper es el anillo")]
@@ -568,6 +571,15 @@ public class GeneradorObstaculos : MonoBehaviour
                 0);
 
             AnadirRombo(libres, centro, radioDiamante);
+        }
+
+        // Modo Boss: el Boss y las casillas de alrededor quedan libres,
+        // para que se le pueda atacar desde cualquier lado
+        BossEnTablero boss = FindAnyObjectByType<BossEnTablero>();
+        if (boss != null)
+        {
+            foreach (Vector3Int casilla in boss.CasillasOcupadas)
+                AnadirRombo(libres, casilla, margenBoss);
         }
 
         return libres;
