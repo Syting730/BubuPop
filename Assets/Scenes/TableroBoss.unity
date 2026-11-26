@@ -5255,6 +5255,7 @@ GameObject:
   - component: {fileID: 767066201}
   - component: {fileID: 767066204}
   - component: {fileID: 767066205}
+  - component: {fileID: 767066206}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Untagged
@@ -5490,6 +5491,26 @@ MonoBehaviour:
   radio: 0
   grid: {fileID: 0}
   suelo: {fileID: 0}
+--- !u!114 &767066206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 767066197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 705b1d8982e1e7142ac62a2ae0a1bff5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Erupcion
+  cantidadBolas: 4
+  pausaErupcion: 4
+  duracionImpacto: 0.5
+  boss: {fileID: 0}
+  aviso: {fileID: 0}
+  puntos: {fileID: 0}
+  prefabBola: {fileID: 1948159499756354534, guid: 8f6c0e7304f584f48be82028b1d923f5, type: 3}
+  radioVolcan: 0
 --- !u!1 &894458637
 GameObject:
   m_ObjectHideFlags: 0
