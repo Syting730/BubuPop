@@ -105,6 +105,13 @@ public class Boom : MonoBehaviour
                 if (fixedWallsTilemap.HasTile(targetCell))
                     break;
 
+                // Modo Boss: la explosión llega al Boss y se para en él
+                if (EsCasillaDelBoss(targetCell))
+                {
+                    affectedCells.Add(targetCell);
+                    break;
+                }
+
                 affectedCells.Add(targetCell);
 
                 if (destructibleTilemap.HasTile(targetCell))
@@ -259,6 +266,8 @@ public class Boom : MonoBehaviour
 
         DamagePlayers(affectedCells);
 
+        DanarBoss(affectedCells);
+
         DestructibleTilemap manager =
             destructibleTilemap.GetComponent<DestructibleTilemap>();
 
@@ -361,6 +370,49 @@ public class Boom : MonoBehaviour
 
                 player.TakeDamage();
             }
+        }
+    }
+
+    // MODO BOSS
+
+    private BossEnTablero bossTablero;
+    private bool bossBuscado = false;
+
+    private BossEnTablero BuscarBoss()
+    {
+        if (!bossBuscado)
+        {
+            bossTablero = FindAnyObjectByType<BossEnTablero>();
+            bossBuscado = true;
+        }
+
+        return bossTablero;
+    }
+
+    private bool EsCasillaDelBoss(Vector3Int casilla)
+    {
+        BossEnTablero boss = BuscarBoss();
+        return boss != null && boss.Ocupa(casilla);
+    }
+
+    // Una explosión que alcanza al Boss cuenta como 1 impacto (-3 HP),
+    // aunque toque varias casillas de un Boss grande
+    private void DanarBoss(List<Vector3Int> affectedCells)
+    {
+        BossEnTablero boss = BuscarBoss();
+        if (boss == null)
+            return;
+
+        foreach (Vector3Int cell in affectedCells)
+        {
+            if (!boss.Ocupa(cell))
+                continue;
+
+            VidaBoss vida = boss.GetComponent<VidaBoss>();
+            if (vida != null)
+                vida.RecibirImpacto(IndiceJugador(dueno));
+
+            return;
         }
     }
 

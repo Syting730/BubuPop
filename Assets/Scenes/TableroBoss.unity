@@ -423,6 +423,7 @@ MonoBehaviour:
   radioSalida: 2
   radioDiamante: 1
   rodearDiamante: 1
+  margenBoss: 1
   caminoLibreHastaAnillo: 1
   borrarObstaculosPintados: 0
   semilla: 0
@@ -5253,6 +5254,7 @@ GameObject:
   - component: {fileID: 767066202}
   - component: {fileID: 767066201}
   - component: {fileID: 767066204}
+  - component: {fileID: 767066205}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Untagged
@@ -5472,6 +5474,22 @@ MonoBehaviour:
   volcan: {fileID: 0}
   prefabFuego: {fileID: 0}
   radioVolcan: 0
+--- !u!114 &767066205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 767066197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20f0c8c09a5e9c446b2e3acc92a97acc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossEnTablero
+  colocarEnElCentro: 1
+  radio: 0
+  grid: {fileID: 0}
+  suelo: {fileID: 0}
 --- !u!1 &894458637
 GameObject:
   m_ObjectHideFlags: 0
