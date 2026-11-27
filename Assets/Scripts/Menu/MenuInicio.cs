@@ -30,9 +30,11 @@ public class MenuInicio : MonoBehaviour
 
     private int jugadorEligiendo = 0;
     private bool[] colorUsado = new bool[GameSettings.MaxPlayers];
+    private Image[] dibujosColor;
 
     private void Start()
     {
+        PonerDibujosEnBotones();
         MostrarPanel(panelPrincipal);
         ActualizarPrincipal();
     }
@@ -118,6 +120,7 @@ public class MenuInicio : MonoBehaviour
         {
             colorUsado[c] = false;
             botonesColor[c].interactable = true;
+            AtenuarDibujo(c, false);
         }
 
         ActualizarTituloColor();
@@ -133,6 +136,7 @@ public class MenuInicio : MonoBehaviour
         colorUsado[color] = true;
 
         botonesColor[color].interactable = false;
+        AtenuarDibujo(color, true);
 
         jugadorEligiendo++;
 
@@ -224,6 +228,56 @@ public class MenuInicio : MonoBehaviour
             default:
                 return "Clásico";
         }
+    }
+
+    private void PonerDibujosEnBotones()
+    {
+        dibujosColor = new Image[botonesColor.Length];
+
+        for (int c = 0; c < botonesColor.Length; c++)
+        {
+            Sprite dibujo = AspectoPersonaje.Cargar((GameSettings.PlayerColor)c, "frente", 1);
+
+            if (dibujo == null)
+                continue;
+
+            TMP_Text etiqueta = botonesColor[c].GetComponentInChildren<TMP_Text>();
+
+            if (etiqueta != null)
+            {
+                RectTransform rtTexto = etiqueta.rectTransform;
+                rtTexto.anchorMin = new Vector2(0f, 0f);
+                rtTexto.anchorMax = new Vector2(1f, 0.25f);
+                rtTexto.offsetMin = Vector2.zero;
+                rtTexto.offsetMax = Vector2.zero;
+                etiqueta.fontSizeMax = etiqueta.fontSize;
+                etiqueta.enableAutoSizing = true;
+            }
+
+            GameObject obj = new GameObject("Personaje", typeof(RectTransform), typeof(Image));
+            RectTransform rt = obj.GetComponent<RectTransform>();
+            rt.SetParent(botonesColor[c].transform, false);
+            rt.SetAsFirstSibling();
+            rt.anchorMin = new Vector2(0.1f, 0.22f);
+            rt.anchorMax = new Vector2(0.9f, 0.98f);
+            rt.offsetMin = Vector2.zero;
+            rt.offsetMax = Vector2.zero;
+
+            Image imagen = obj.GetComponent<Image>();
+            imagen.sprite = dibujo;
+            imagen.preserveAspect = true;
+            imagen.raycastTarget = false;
+
+            dibujosColor[c] = imagen;
+        }
+    }
+
+    private void AtenuarDibujo(int c, bool atenuar)
+    {
+        if (dibujosColor == null || c >= dibujosColor.Length || dibujosColor[c] == null)
+            return;
+
+        dibujosColor[c].color = atenuar ? new Color(1f, 1f, 1f, 0.3f) : Color.white;
     }
 
     private void MostrarPanel(GameObject panel)
