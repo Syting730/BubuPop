@@ -818,7 +818,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 297966111}
-  - component: {fileID: 297966110}
   - component: {fileID: 297966112}
   m_Layer: 0
   m_Name: PuntosAD
@@ -827,22 +826,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &297966110
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 297966109}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1db038ce2b54a1a4eb3494af731e3346, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PuntosAd
-  puntosPorEntrega: 15
-  alCambiarPuntos:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!4 &297966111
 Transform:
   m_ObjectHideFlags: 0
@@ -5347,7 +5330,6 @@ GameObject:
   - component: {fileID: 767066198}
   - component: {fileID: 767066203}
   - component: {fileID: 767066202}
-  - component: {fileID: 767066201}
   - component: {fileID: 767066204}
   - component: {fileID: 767066205}
   - component: {fileID: 767066206}
@@ -5479,18 +5461,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &767066201
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 767066197}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbaaa0451bfb2467a9908c4652c1d339, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProbarBoss
 --- !u!114 &767066202
 MonoBehaviour:
   m_ObjectHideFlags: 0
