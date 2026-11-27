@@ -138,6 +138,8 @@ public class PartidaManager : MonoBehaviour
         int participantes = 0;
         int vivos = 0;
         int ultimoVivo = -1;
+        int realesVivos = 0;
+        int iasVivas = 0;
 
         for (int i = 0; i < jugadores.Length; i++)
         {
@@ -150,6 +152,11 @@ public class PartidaManager : MonoBehaviour
             {
                 vivos++;
                 ultimoVivo = i;
+
+                if (EsIA(i))
+                    iasVivas++;
+                else
+                    realesVivos++;
             }
         }
 
@@ -157,32 +164,120 @@ public class PartidaManager : MonoBehaviour
             return;
 
         if (vivos == 1)
+        {
             TerminarPartida("¡Gana " + NombreJugador(ultimoVivo) + "!");
+        }
         else if (vivos == 0)
+        {
             TerminarPartida("¡Empate!");
+        }
+        else if (GameSettings.SettingsChosen && realesVivos == 0 && iasVivas >= 2)
+        {
+            // Han muerto todos los jugadores reales: no esperamos a las IAs
+            TerminarSinJugadoresReales();
+        }
     }
 
+    // Gana la IA con mas vidas; si varias tienen las mismas, empate entre ellas
+    private void TerminarSinJugadoresReales()
+    {
+        int maxVidas = -1;
+
+        // 1. Buscar el maximo de vidas entre los que siguen vivos
+        for (int i = 0; i < jugadores.Length; i++)
+        {
+            if (jugadores[i] == null || !jugadores[i].activeSelf)
+                continue;
+
+            int vidas = VidasDe(i);
+            if (vidas > maxVidas)
+                maxVidas = vidas;
+        }
+
+        // 2. Juntar todos los que tienen ese maximo
+        string nombres = "";
+        int cuantos = 0;
+
+        for (int i = 0; i < jugadores.Length; i++)
+        {
+            if (jugadores[i] == null || !jugadores[i].activeSelf)
+                continue;
+
+            if (VidasDe(i) != maxVidas)
+                continue;
+
+            if (cuantos > 0)
+                nombres += " y ";
+            nombres += NombreJugador(i);
+            cuantos++;
+        }
+
+        string motivo = "No quedan jugadores reales";
+        string vidasTexto = maxVidas == 1 ? " vida" : " vidas";
+
+        if (cuantos == 1)
+            TerminarPartida(motivo + "\n¡Gana " + nombres +
+                            " con " + maxVidas + vidasTexto + "!");
+        else
+            TerminarPartida(motivo + "\n¡Empate entre " + nombres +
+                            " con " + maxVidas + vidasTexto + "!");
+    }
+
+    private int VidasDe(int i)
+    {
+        PlayerDamage dano = jugadores[i].GetComponent<PlayerDamage>();
+        return dano != null ? dano.GetCurrentLives() : 0;
+    }
+
+    // Fin por tiempo (modo Diamante: 3 min / modo Boss: 5 min)
     public void TerminarPorTiempo()
     {
         if (partidaTerminada)
             return;
 
-        PuntosAD puntos = FindAnyObjectByType<PuntosAD>();
+        TerminarPorPuntos("¡Se acabó el tiempo!");
+    }
 
-        if (puntos == null)
+    // Modo Boss: se llama cuando el Boss muere (evento alMorir de VidaBoss)
+    public void TerminarPorBossDerrotado(int jugadorGolpeFinal)
+    {
+        if (partidaTerminada)
+            return;
+
+        TerminarPorPuntos("¡Boss derrotado por " +
+                          NombreJugador(jugadorGolpeFinal) + "!");
+    }
+
+    // Gana quien tenga mas puntos (puntos del Boss o del Diamante)
+    private void TerminarPorPuntos(string motivo)
+    {
+        int ganador;
+        int puntosGanador;
+
+        PuntosBoss puntosBoss = FindAnyObjectByType<PuntosBoss>();
+        PuntosAD puntosAD = FindAnyObjectByType<PuntosAD>();
+
+        if (puntosBoss != null)
         {
-            TerminarPartida("¡Se acabó el tiempo!");
+            ganador = puntosBoss.Ganador();
+            puntosGanador = ganador >= 0 ? puntosBoss.GetPuntos(ganador) : 0;
+        }
+        else if (puntosAD != null)
+        {
+            ganador = puntosAD.Ganador();
+            puntosGanador = ganador >= 0 ? puntosAD.GetPuntos(ganador) : 0;
+        }
+        else
+        {
+            TerminarPartida(motivo);
             return;
         }
 
-        int ganador = puntos.Ganador();
-
         if (ganador < 0)
-            TerminarPartida("¡Se acabó el tiempo!\n¡Empate!");
+            TerminarPartida(motivo + "\n¡Empate!");
         else
-            TerminarPartida("¡Se acabó el tiempo!\n¡Gana " +
-                            NombreJugador(ganador) + " con " +
-                            puntos.GetPuntos(ganador) + " puntos!");
+            TerminarPartida(motivo + "\n¡Gana " + NombreJugador(ganador) +
+                            " con " + puntosGanador + " puntos!");
     }
 
     private void TerminarPartida(string mensaje)

@@ -75,6 +75,8 @@ public class MenuInicio : MonoBehaviour
 
         if (GameSettings.SelectedMode == GameSettings.GameMode.AsaltoDiamante)
             SceneManager.LoadScene("TableroAD");
+        else if (GameSettings.SelectedMode == GameSettings.GameMode.BossVolcan)
+            SceneManager.LoadScene("TableroBoss");
         else
             SceneManager.LoadScene("Tablero");
     }

@@ -33,7 +33,8 @@ public class PlayerDamage : MonoBehaviour
 
         currentLives = maxLives;
 
-        vidasInfinitas = FindAnyObjectByType<PuntosAD>() != null;
+        vidasInfinitas = FindAnyObjectByType<PuntosAD>() != null ||
+                         FindAnyObjectByType<PuntosBoss>() != null;
 
         if (livesUI != null)
         {
