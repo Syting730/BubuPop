@@ -301,6 +301,11 @@ public class Boom : MonoBehaviour
 
             if (puntos != null && indiceDueno >= 0)
                 puntos.SumarObstaculos(indiceDueno, obstaculosRotos);
+
+            PuntosBoss puntosBoss = FindAnyObjectByType<PuntosBoss>();
+
+            if (puntosBoss != null && indiceDueno >= 0)
+                puntosBoss.SumarObstaculos(indiceDueno, obstaculosRotos);
         }
 
         RemoveWarnings();
@@ -348,6 +353,7 @@ public class Boom : MonoBehaviour
             FindObjectsByType<PlayerDamage>();
 
         PuntosAD puntos = FindAnyObjectByType<PuntosAD>();
+        PuntosBoss puntosBoss = FindAnyObjectByType<PuntosBoss>();
         int indiceDueno = IndiceJugador(dueno);
 
         foreach (PlayerDamage player in players)
@@ -366,6 +372,12 @@ public class Boom : MonoBehaviour
                     indiceVictima >= 0 && indiceVictima != indiceDueno)
                 {
                     puntos.SumarEliminacion(indiceDueno, indiceVictima);
+                }
+
+                if (puntosBoss != null && indiceDueno >= 0 &&
+                    indiceVictima >= 0 && indiceVictima != indiceDueno)
+                {
+                    puntosBoss.SumarEliminacion(indiceDueno, indiceVictima);
                 }
 
                 player.TakeDamage();
