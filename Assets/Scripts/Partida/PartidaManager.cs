@@ -25,9 +25,6 @@ public class PartidaManager : MonoBehaviour
     {
         Time.timeScale = 1f;
 
-        if (!GameSettings.SettingsChosen)
-            return;
-
         for (int i = 0; i < jugadores.Length; i++)
         {
             if (jugadores[i] == null)
@@ -54,11 +51,16 @@ public class PartidaManager : MonoBehaviour
 
     private void PonerColor(int i)
     {
-        SpriteRenderer sr =
-            jugadores[i].GetComponentInChildren<SpriteRenderer>();
+        GameSettings.PlayerColor color = GameSettings.SettingsChosen
+            ? GameSettings.PlayerColors[i]
+            : (GameSettings.PlayerColor)(i % GameSettings.MaxPlayers);
 
-        if (sr != null)
-            sr.color = GameSettings.ToUnityColor(GameSettings.PlayerColors[i]);
+        AspectoPersonaje aspecto = jugadores[i].GetComponent<AspectoPersonaje>();
+
+        if (aspecto == null)
+            aspecto = jugadores[i].AddComponent<AspectoPersonaje>();
+
+        aspecto.Poner(color);
     }
 
     private bool EsIA(int i)
