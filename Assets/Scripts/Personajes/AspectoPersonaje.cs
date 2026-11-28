@@ -3,6 +3,8 @@ using UnityEngine;
 public class AspectoPersonaje : MonoBehaviour
 {
     private const float TiempoPaso = 0.15f;
+    private const float TiempoParaQuieto = 0.12f;
+    private const float MovimientoMinimo = 0.0005f;
 
     private SpriteRenderer sr;
     private Sprite[] frente;
@@ -10,6 +12,8 @@ public class AspectoPersonaje : MonoBehaviour
     private Sprite[] derecha;
     private Sprite[] espalda;
     private Vector3 ultimaPosicion;
+    private Vector2 ultimaDireccion;
+    private float tiempoQuieto = 1f;
     private float reloj;
     private int paso;
 
@@ -22,6 +26,7 @@ public class AspectoPersonaje : MonoBehaviour
     {
         Sprite uno = Cargar(color, direccion, 1);
         Sprite dos = Cargar(color, direccion, 2);
+        Sprite tres = Cargar(color, direccion, 3);
 
         if (uno == null)
             return null;
@@ -29,7 +34,10 @@ public class AspectoPersonaje : MonoBehaviour
         if (dos == null)
             dos = uno;
 
-        return new Sprite[] { uno, dos };
+        if (tres == null)
+            tres = dos;
+
+        return new Sprite[] { uno, dos, uno, tres };
     }
 
     public void Poner(GameSettings.PlayerColor color)
@@ -55,25 +63,46 @@ public class AspectoPersonaje : MonoBehaviour
         sr.color = Color.white;
         Mostrar(frente[0], false);
         ultimaPosicion = transform.position;
+        tiempoQuieto = 1f;
     }
 
     private void OnEnable()
     {
         ultimaPosicion = transform.position;
+        tiempoQuieto = 1f;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         if (sr == null || Time.deltaTime <= 0f)
             return;
 
-        Vector3 movimiento = transform.position - ultimaPosicion;
+        Vector2 movimiento = transform.position - ultimaPosicion;
         ultimaPosicion = transform.position;
 
-        float x = Mathf.Abs(movimiento.x);
-        float y = Mathf.Abs(movimiento.y);
+        if (movimiento.magnitude > MovimientoMinimo)
+        {
+            if (tiempoQuieto >= TiempoParaQuieto)
+            {
+                reloj = 0f;
+                paso = 1;
+            }
 
-        if (x < 0.001f && y < 0.001f)
+            tiempoQuieto = 0f;
+
+            if (Mathf.Abs(movimiento.x) > Mathf.Abs(movimiento.y) * 1.5f)
+                ultimaDireccion = new Vector2(Mathf.Sign(movimiento.x), 0f);
+            else if (Mathf.Abs(movimiento.y) > Mathf.Abs(movimiento.x) * 1.5f)
+                ultimaDireccion = new Vector2(0f, Mathf.Sign(movimiento.y));
+            else if (ultimaDireccion == Vector2.zero)
+                ultimaDireccion = new Vector2(0f, Mathf.Sign(movimiento.y));
+        }
+        else
+        {
+            tiempoQuieto += Time.deltaTime;
+        }
+
+        if (tiempoQuieto >= TiempoParaQuieto)
         {
             reloj = 0f;
             paso = 0;
@@ -85,26 +114,23 @@ public class AspectoPersonaje : MonoBehaviour
 
         if (reloj >= TiempoPaso)
         {
-            reloj = 0f;
-            paso = 1 - paso;
+            reloj -= TiempoPaso;
+            paso = (paso + 1) % 4;
         }
 
-        if (x > y)
+        if (ultimaDireccion.x > 0f)
+            Mostrar(derecha[paso], false);
+        else if (ultimaDireccion.x < 0f)
         {
-            if (movimiento.x > 0f)
-                Mostrar(derecha[paso], false);
-            else if (izquierda != null)
+            if (izquierda != null)
                 Mostrar(izquierda[paso], false);
             else
                 Mostrar(derecha[paso], true);
         }
+        else if (ultimaDireccion.y > 0f)
+            Mostrar(espalda[paso], false);
         else
-        {
-            if (movimiento.y > 0f)
-                Mostrar(espalda[paso], false);
-            else
-                Mostrar(frente[paso], false);
-        }
+            Mostrar(frente[paso], false);
     }
 
     private void Mostrar(Sprite dibujo, bool girar)
