@@ -24,6 +24,11 @@ public class DestructibleTilemap : MonoBehaviour
         if (originalTile == null)
             return false;
 
+        // Efecto visual al romperse (si está en el mismo objeto)
+        EfectoRomperObstaculo efecto = GetComponent<EfectoRomperObstaculo>();
+        if (efecto != null)
+            efecto.Romper(cell);
+
         tilemap.SetTile(cell, null);
 
         Debug.Log("Obstáculo destruido en: " + cell);
