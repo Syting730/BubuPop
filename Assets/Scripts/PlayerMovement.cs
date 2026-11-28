@@ -94,7 +94,7 @@ public class PlayerMovement : MonoBehaviour
         movementInput = direction;
     }
 
-    Gamepad MiMando()
+    internal Gamepad MiMando()
     {
         if (numeroMando < 0 || numeroMando >= Gamepad.all.Count)
             return null;

@@ -18,14 +18,13 @@ public class PlayerShieldPowerUps : MonoBehaviour
             efectoVisualEscudo.SetActive(false);
     }
 
-    public void ActivarEscudo()
+    public bool ActivarEscudo()
     {
-        if (temporizadorEscudo != null)
-            StopCoroutine(temporizadorEscudo);
+        if (escudoActivo || !isActiveAndEnabled)
+            return false;
 
-        temporizadorEscudo = StartCoroutine(
-            TemporizadorDelEscudo()
-        );
+        temporizadorEscudo = StartCoroutine(TemporizadorDelEscudo());
+        return true;
     }
 
     private IEnumerator TemporizadorDelEscudo()
@@ -37,6 +36,19 @@ public class PlayerShieldPowerUps : MonoBehaviour
 
         yield return new WaitForSeconds(duracionEscudo);
 
+        DesactivarEscudo();
+    }
+
+    private void OnDisable()
+    {
+        if (temporizadorEscudo != null)
+            StopCoroutine(temporizadorEscudo);
+
+        DesactivarEscudo();
+    }
+
+    private void DesactivarEscudo()
+    {
         escudoActivo = false;
 
         if (efectoVisualEscudo != null)
