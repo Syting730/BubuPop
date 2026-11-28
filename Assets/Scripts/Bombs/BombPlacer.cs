@@ -22,8 +22,9 @@ public class BombPlacer : MonoBehaviour
     private readonly List<GameObject> bombasActivas =
         new List<GameObject>();
 
-    public int CapacidadBombas =>
-        capacidadBombas + ((bombaDobleActiva || segundaBombaPendiente) ? 1 : 0);
+    public bool BombaExtraPendiente => bombaDobleActiva || segundaBombaPendiente;
+
+    public int CapacidadBombas => capacidadBombas + (BombaExtraPendiente ? 1 : 0);
 
     private void Update()
     {
@@ -86,7 +87,7 @@ public class BombPlacer : MonoBehaviour
 
     public bool ActivarBombaDoble()
     {
-        if (bombaDobleActiva || segundaBombaPendiente)
+        if (BombaExtraPendiente)
             return false;
 
         bombaDobleActiva = true;
@@ -98,47 +99,34 @@ public class BombPlacer : MonoBehaviour
         if (grid == null)
             return false;
 
-        bombasActivas.RemoveAll(bomba => bomba == null);
+        Vector3Int celdaJugador = grid.WorldToCell(transform.position);
+        Boom bombaMasCercana = null;
+        Vector3Int diferenciaElegida = Vector3Int.zero;
+        int distanciaMinima = int.MaxValue;
 
-        for (int i = bombasActivas.Count - 1; i >= 0; i--)
+        foreach (Boom bomba in FindObjectsByType<Boom>())
         {
-            GameObject bomba = bombasActivas[i];
-            Boom boom = bomba.GetComponent<Boom>();
+            Vector3Int diferencia =
+                grid.WorldToCell(bomba.transform.position) - celdaJugador;
+            int distanciaEnCeldas = Mathf.Abs(diferencia.x) + Mathf.Abs(diferencia.y);
 
-            if (boom == null)
+            if (distanciaEnCeldas == 0 || distanciaEnCeldas >= distanciaMinima)
                 continue;
 
-            Vector3Int celdaJugador =
-                grid.WorldToCell(transform.position);
-
-            Vector3Int celdaBomba =
-                grid.WorldToCell(bomba.transform.position);
-
-            Vector3Int diferencia = celdaBomba - celdaJugador;
-
-            if (diferencia == Vector3Int.zero)
-                return false;
-
-            Vector2 direccion;
-
-            if (Mathf.Abs(diferencia.x) > Mathf.Abs(diferencia.y))
-            {
-                direccion = new Vector2(
-                    Mathf.Sign(diferencia.x),
-                    0f
-                );
-            }
-            else
-            {
-                direccion = new Vector2(
-                    0f,
-                    Mathf.Sign(diferencia.y)
-                );
-            }
-
-            return boom.Empujar(direccion, distancia);
+            bombaMasCercana = bomba;
+            diferenciaElegida = diferencia;
+            distanciaMinima = distanciaEnCeldas;
         }
 
-        return false;
+        if (bombaMasCercana == null)
+            return false;
+
+        Vector2 direccion;
+        if (Mathf.Abs(diferenciaElegida.x) > Mathf.Abs(diferenciaElegida.y))
+            direccion = new Vector2(Mathf.Sign(diferenciaElegida.x), 0f);
+        else
+            direccion = new Vector2(0f, Mathf.Sign(diferenciaElegida.y));
+
+        return bombaMasCercana.Empujar(direccion, distancia);
     }
 }

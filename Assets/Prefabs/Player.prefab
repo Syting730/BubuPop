@@ -336,7 +336,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3363a45c4e3643348ab6ec4fea3d5fed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerGlovePowerUp
-  maxGuantesAlmacenados: 1
   distanciaEmpujeGuante: 2
   teclaUsarGuante: 31
 --- !u!114 &7302931211876105965
