@@ -9981,7 +9981,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpsHUD
   jugador: {fileID: 1644458630}
-  desplazamiento: {x: 0, y: -140}
+  desplazamiento: {x: 0, y: -110}
   spriteGuante: {fileID: 6552887336232023551, guid: a7fc46e65ff1ac34190c621a61791ca3, type: 3}
   spriteEscudo: {fileID: -3803196367135801590, guid: f2a7231ddd5744749824d9105df9a404, type: 3}
   spriteBurbujaExtra: {fileID: -9967498257215435, guid: eec7c4d18381f5e49b09b857b603016d, type: 3}
@@ -9998,7 +9998,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpsHUD
   jugador: {fileID: 1208737448}
-  desplazamiento: {x: 0, y: 140}
+  desplazamiento: {x: 0, y: 110}
   spriteGuante: {fileID: 6552887336232023551, guid: a7fc46e65ff1ac34190c621a61791ca3, type: 3}
   spriteEscudo: {fileID: -3803196367135801590, guid: f2a7231ddd5744749824d9105df9a404, type: 3}
   spriteBurbujaExtra: {fileID: -9967498257215435, guid: eec7c4d18381f5e49b09b857b603016d, type: 3}
@@ -10015,7 +10015,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpsHUD
   jugador: {fileID: 1486336160}
-  desplazamiento: {x: 0, y: -140}
+  desplazamiento: {x: 0, y: -110}
   spriteGuante: {fileID: 6552887336232023551, guid: a7fc46e65ff1ac34190c621a61791ca3, type: 3}
   spriteEscudo: {fileID: -3803196367135801590, guid: f2a7231ddd5744749824d9105df9a404, type: 3}
   spriteBurbujaExtra: {fileID: -9967498257215435, guid: eec7c4d18381f5e49b09b857b603016d, type: 3}
@@ -10032,7 +10032,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpsHUD
   jugador: {fileID: 2101079495}
-  desplazamiento: {x: 0, y: 140}
+  desplazamiento: {x: 0, y: 110}
   spriteGuante: {fileID: 6552887336232023551, guid: a7fc46e65ff1ac34190c621a61791ca3, type: 3}
   spriteEscudo: {fileID: -3803196367135801590, guid: f2a7231ddd5744749824d9105df9a404, type: 3}
   spriteBurbujaExtra: {fileID: -9967498257215435, guid: eec7c4d18381f5e49b09b857b603016d, type: 3}
