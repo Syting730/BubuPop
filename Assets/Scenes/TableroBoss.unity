@@ -5805,7 +5805,7 @@ MonoBehaviour:
   aviso: {fileID: 0}
   puntos: {fileID: 0}
   volcan: {fileID: 0}
-  prefabFuego: {fileID: 0}
+  prefabFuego: {fileID: 257022280098356504, guid: b69902aca0efa1b4bae59790e908669d, type: 3}
   radioVolcan: 0
 --- !u!114 &767066205
 MonoBehaviour:
