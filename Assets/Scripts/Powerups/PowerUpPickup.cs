@@ -38,8 +38,7 @@ public class PowerUpPickup : MonoBehaviour
             if (escudo == null)
                 return;
 
-            escudo.ActivarEscudo();
-            recogidaCorrecta = true;
+            recogidaCorrecta = escudo.ActivarEscudo();
         }
         else if (tipo == TipoPowerUp.Guante)
         {
